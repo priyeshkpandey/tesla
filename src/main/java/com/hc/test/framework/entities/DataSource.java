@@ -9,39 +9,26 @@ import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 @Entity
-@Table(name="test_script")
-public class TestScript {
-
+@Table(name="data_source")
+public class DataSource {
+	
 	@Autowired
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
-	Long id;
+	@Column(name="data_id")
+	Long dataId;
+	
+	@Autowired
+	@Column(name="data_set_id")
+	Long dataSetId;
 	
 	@Autowired
 	@Column(name="step_seq")
 	Long stepSeq;
 	
 	@Autowired
-	@Column(name="tc_id")
-	String tcId;
-	
-	@Autowired
-	@Column(name="oa_id")
-	Long objActionId;
-	
-	@Autowired
-	@Column(name="on_fail")
-	String onFail;
-	
-	@Autowired
-	@Column(name="on_pass")
-	String onPass;
-	
-	@Autowired
-	@Column(name="is_screenshot")
-	Boolean isScreenshot;
-	
+	@Column(name="value")
+	String value;
+
 }

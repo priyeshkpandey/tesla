@@ -4,4 +4,282 @@
   <artifactId>TestAutomationFramework</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+       <version.jdk>1.7</version.jdk>  <!-- 1.7 for JDK 7 -->
+       <version.mvn.compiler>3.2</version.mvn.compiler>
+       <version.mvn.dependency>2.10</version.mvn.dependency>
+       <version.mvn.war.plugin>2.6</version.mvn.war.plugin>
+       <version.jersey>2.15</version.jersey>
+       <spring.version>4.2.2.RELEASE</spring.version>
+       <jackson.version>2.6.3</jackson.version>
+       <version.jpa>1.9.0.RELEASE</version.jpa>
+       <version.slf4j>1.7.12</version.slf4j>
+       <junit.version>4.11</junit.version>
+       <javax.servlet.version>2.5</javax.servlet.version>
+       <javax.persistence.version>1.0.2</javax.persistence.version>
+       <hibernate.version>5.0.0.Final</hibernate.version>
+       <mysql.version>5.1.35</mysql.version>
+       <dbcp.version>1.4</dbcp.version>
+       <jackson.version>2.6.1</jackson.version>
+       <mvn.tomcat.plugin.version>2.2</mvn.tomcat.plugin.version>
+    </properties>
+    
+    <build>
+  <finalName>TestAutomationFramework</finalName>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+    <resource>
+      <directory>resources</directory>
+    </resource>
+   </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <source>${version.jdk}</source>
+          <target>${version.jdk}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${version.mvn.war.plugin}</version>
+        <configuration>
+          <warSourceDirectory>src/main/webapp</warSourceDirectory>
+          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+       <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${version.mvn.dependency}</version>
+        
+          <executions>
+          <execution>
+            
+            <configuration>
+              <outputDirectory>/target/</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions> 
+        
+        <configuration>
+          <source>${version.jdk}</source>
+          <target>${version.jdk}</target>
+        </configuration>
+        
+      </plugin>
+      
+      <plugin>
+			<groupId>org.apache.tomcat.maven</groupId>
+			<artifactId>tomcat8-maven-plugin</artifactId>
+			<version>${mvn.tomcat.plugin.version}</version>
+			<configuration>
+				<path>/TestAutomationFramework</path>
+			</configuration>
+		  </plugin>
+      
+    </plugins>
+  </build>
+  <repositories>
+
+        <repository>
+            <id>java.net-Public</id>
+           <name>Maven Java Net Snapshots and Releases</name>
+           <url>https://maven.java.net/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+
+        <repository>
+            <id>Central</id>
+            <name>Maven Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+        </repository>
+
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        
+        
+        
+        </repositories>
+  
+  <dependencies>
+    
+  
+  <dependency>
+	<groupId>com.fasterxml.jackson.core</groupId>
+	<artifactId>jackson-core</artifactId>
+	<version>${jackson.version}</version>
+	</dependency>
+  
+  <dependency>
+	<groupId>com.fasterxml.jackson.core</groupId>
+	<artifactId>jackson-databind</artifactId>
+	<version>${jackson.version}</version>
+	</dependency>
+  
+  
+  <dependency>
+	<groupId>commons-dbcp</groupId>
+	<artifactId>commons-dbcp</artifactId>
+	<version>${dbcp.version}</version>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-ehcache</artifactId>
+	<version>${hibernate.version}</version>
+	</dependency>
+  
+  <dependency>
+	<groupId>javax.persistence</groupId>
+	<artifactId>persistence-api</artifactId>
+	<version>${javax.persistence.version}</version>
+	</dependency>
+	
+	<dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+	
+	
+	<dependency>
+	<groupId>mysql</groupId>
+	<artifactId>mysql-connector-java</artifactId>
+	<version>${mysql.version}</version>
+	</dependency>
+  
+  
+  
+  <dependency>
+           <groupId>org.glassfish.jersey.media</groupId>
+           <artifactId>jersey-media-json-jackson</artifactId>
+           <version>${version.jersey}</version>
+       </dependency>
+       <dependency>
+           <groupId>org.glassfish.jersey.media</groupId>
+           <artifactId>jersey-media-json-processing</artifactId>
+           <version>${version.jersey}</version>
+       </dependency>
+       <dependency>
+           <groupId>org.glassfish.jersey.media</groupId>
+           <artifactId>jersey-media-multipart</artifactId>
+           <version>${version.jersey}</version>
+       </dependency>
+       
+       <dependency>
+           <groupId>org.glassfish.jersey.media</groupId>
+           <artifactId>jersey-media-sse</artifactId>
+           <version>${version.jersey}</version>
+       </dependency>
+       
+       <dependency>
+	<groupId>com.fasterxml.jackson.core</groupId>
+	<artifactId>jackson-annotations</artifactId>
+	<version>${jackson.version}</version>
+	</dependency>
+       
+       <dependency>
+	<groupId>com.fasterxml.jackson.core</groupId>
+	<artifactId>jackson-core</artifactId>
+	<version>${jackson.version}</version>
+</dependency>
+       
+       <dependency>
+	<groupId>com.fasterxml.jackson.core</groupId>
+	<artifactId>jackson-databind</artifactId>
+	<version>${jackson.version}</version>
+</dependency>
+       
+       <dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-core</artifactId>
+	<version>${spring.version}</version>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-beans</artifactId>
+	<version>${spring.version}</version>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-context</artifactId>
+	<version>${spring.version}</version>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-web</artifactId>
+	<version>${spring.version}</version>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-webmvc</artifactId>
+	<version>${spring.version}</version>
+	</dependency>
+	
+	<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>${spring.version}</version>
+	</dependency>
+	
+	
+	<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-api</artifactId>
+	<version>${version.slf4j}</version>
+	</dependency>
+
+	<dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${version.slf4j}</version>
+    </dependency>
+    
+    <dependency>
+	<groupId>org.springframework.data</groupId>
+	<artifactId>spring-data-jpa</artifactId>
+	<version>${version.jpa}</version>
+	</dependency>
+  
+  <dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>	
+		
+	<dependency>
+	<groupId>javax.servlet</groupId>
+	<artifactId>servlet-api</artifactId>
+	<version>${javax.servlet.version}</version>
+	</dependency>
+		
+		
+  </dependencies>
+  
 </project>
