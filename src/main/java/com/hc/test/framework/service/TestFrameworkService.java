@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.hc.test.framework.entities.RunOrder;
+
 
 
 @Controller
@@ -22,6 +24,8 @@ public class TestFrameworkService {
 		{
 			ipAddr = request.getRemoteAddr();
 		}
+		
+		
 		
 		System.out.println("Client IP: "+ipAddr);
 		

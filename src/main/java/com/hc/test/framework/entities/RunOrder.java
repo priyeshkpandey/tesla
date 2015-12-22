@@ -21,7 +21,7 @@ public class RunOrder {
 	
 	@Autowired
 	@Column(name="tc_id")
-	String tcId;
+	Long tcId;
 	
 	@Autowired
 	@Column(name="is_execute")

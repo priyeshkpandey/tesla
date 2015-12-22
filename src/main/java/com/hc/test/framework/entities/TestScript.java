@@ -26,7 +26,7 @@ public class TestScript {
 	
 	@Autowired
 	@Column(name="tc_id")
-	String tcId;
+	Long tcId;
 	
 	@Autowired
 	@Column(name="oa_id")
