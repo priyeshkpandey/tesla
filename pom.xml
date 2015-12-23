@@ -28,7 +28,7 @@
     
     <build>
   <finalName>TestAutomationFramework</finalName>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <resources>
     <resource>
       <directory>resources</directory>
