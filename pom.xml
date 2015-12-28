@@ -24,6 +24,16 @@
        <dbcp.version>1.4</dbcp.version>
        <jackson.version>2.6.1</jackson.version>
        <mvn.tomcat.plugin.version>2.2</mvn.tomcat.plugin.version>
+       <commons.config.version>2.0-alpha1-SNAPSHOT</commons.config.version>
+       <commons.lang3.version>3.4</commons.lang3.version>
+       <commons.io.version>1.3.2</commons.io.version>
+       <commons.logging.version>1.2</commons.logging.version>
+       <commons.beanutils.version>1.9.2</commons.beanutils.version>
+       <commons.codec.version>1.10</commons.codec.version>
+       <commons.jxpath.version>1.3</commons.jxpath.version>
+       <commons.jexl.version>2.1.1</commons.jexl.version>
+       <commons.vfs2.version>2.0</commons.vfs2.version>
+       <xml.resolver.version>1.2</xml.resolver.version>
     </properties>
     
     <build>
@@ -113,12 +123,92 @@
             </snapshots>
         </repository>
         
-        
+    <repository>
+    <id>apache.snapshots</id>
+    <name>Apache Development Snapshot Repository</name>
+    <url>https://repository.apache.org/content/repositories/snapshots/</url>
+    <releases>
+        <enabled>false</enabled>
+    </releases>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+	</repository>
         
         </repositories>
   
   <dependencies>
+  
+  <dependency>
+	<groupId>xml-resolver</groupId>
+	<artifactId>xml-resolver</artifactId>
+	<version>${xml.resolver.version}</version>
+</dependency>
+  
+  
+  <dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-vfs2</artifactId>
+	<version>${commons.vfs2.version}</version>
+</dependency>
+  
+  
+  <dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-jexl</artifactId>
+	<version>${commons.jexl.version}</version>
+</dependency>
+  
+  
+  <dependency>
+	<groupId>commons-jxpath</groupId>
+	<artifactId>commons-jxpath</artifactId>
+	<version>${commons.jxpath.version}</version>
+</dependency>
+  
+  
+  <dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>${commons.codec.version}</version>
+</dependency>
+  
+  
+  <dependency>
+	<groupId>commons-beanutils</groupId>
+	<artifactId>commons-beanutils</artifactId>
+	<version>${commons.beanutils.version}</version>
+</dependency>
+  
+  
+  <dependency>
+	<groupId>commons-logging</groupId>
+	<artifactId>commons-logging</artifactId>
+	<version>${commons.logging.version}</version>
+	</dependency>
+  
     
+    <dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>${commons.io.version}</version>
+	</dependency>
+    
+    
+    <dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-lang3</artifactId>
+	<version>${commons.lang3.version}</version>
+	</dependency>
+    
+    
+  <dependency>
+  	<groupId>org.apache.commons</groupId>
+  	<artifactId>commons-configuration2</artifactId>
+  	<version>${commons.config.version}</version>
+  </dependency>
+  
+  
   
   <dependency>
 	<groupId>com.fasterxml.jackson.core</groupId>
