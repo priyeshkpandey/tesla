@@ -31,4 +31,37 @@ public class DataSource {
 	@Column(name="value")
 	String value;
 
+	public Long getDataId() {
+		return dataId;
+	}
+
+	public void setDataId(Long dataId) {
+		this.dataId = dataId;
+	}
+
+	public Long getDataSetId() {
+		return dataSetId;
+	}
+
+	public void setDataSetId(Long dataSetId) {
+		this.dataSetId = dataSetId;
+	}
+
+	public Long getStepSeq() {
+		return stepSeq;
+	}
+
+	public void setStepSeq(Long stepSeq) {
+		this.stepSeq = stepSeq;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	
 }

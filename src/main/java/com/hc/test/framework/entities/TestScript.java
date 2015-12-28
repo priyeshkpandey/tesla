@@ -43,5 +43,62 @@ public class TestScript {
 	@Autowired
 	@Column(name="is_screenshot")
 	Boolean isScreenshot;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getStepSeq() {
+		return stepSeq;
+	}
+
+	public void setStepSeq(Long stepSeq) {
+		this.stepSeq = stepSeq;
+	}
+
+	public Long getTcId() {
+		return tcId;
+	}
+
+	public void setTcId(Long tcId) {
+		this.tcId = tcId;
+	}
+
+	public Long getObjActionId() {
+		return objActionId;
+	}
+
+	public void setObjActionId(Long objActionId) {
+		this.objActionId = objActionId;
+	}
+
+	public String getOnFail() {
+		return onFail;
+	}
+
+	public void setOnFail(String onFail) {
+		this.onFail = onFail;
+	}
+
+	public String getOnPass() {
+		return onPass;
+	}
+
+	public void setOnPass(String onPass) {
+		this.onPass = onPass;
+	}
+
+	public Boolean getIsScreenshot() {
+		return isScreenshot;
+	}
+
+	public void setIsScreenshot(Boolean isScreenshot) {
+		this.isScreenshot = isScreenshot;
+	}
+	
 	
 }

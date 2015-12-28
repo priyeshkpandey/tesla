@@ -51,4 +51,77 @@ public class RunOrder {
 	@Column(name="app_type")
 	String appType;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getTcId() {
+		return tcId;
+	}
+
+	public void setTcId(Long tcId) {
+		this.tcId = tcId;
+	}
+
+	public Boolean getIsExecute() {
+		return isExecute;
+	}
+
+	public void setIsExecute(Boolean isExecute) {
+		this.isExecute = isExecute;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public Long getDataSetId() {
+		return dataSetId;
+	}
+
+	public void setDataSetId(Long dataSetId) {
+		this.dataSetId = dataSetId;
+	}
+
+	public String getObjRepoName() {
+		return objRepoName;
+	}
+
+	public void setObjRepoName(String objRepoName) {
+		this.objRepoName = objRepoName;
+	}
+
+	public String getAppUrl() {
+		return appUrl;
+	}
+
+	public void setAppUrl(String appUrl) {
+		this.appUrl = appUrl;
+	}
+
+	public Long getRunSeq() {
+		return runSeq;
+	}
+
+	public void setRunSeq(Long runSeq) {
+		this.runSeq = runSeq;
+	}
+
+	public String getAppType() {
+		return appType;
+	}
+
+	public void setAppType(String appType) {
+		this.appType = appType;
+	}
+
+	
 }

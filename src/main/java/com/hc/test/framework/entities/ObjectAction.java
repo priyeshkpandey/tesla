@@ -30,4 +30,38 @@ public class ObjectAction {
 	@Autowired
 	@Column(name="action")
 	String action;
+
+	public Long getObjActionId() {
+		return objActionId;
+	}
+
+	public void setObjActionId(Long objActionId) {
+		this.objActionId = objActionId;
+	}
+
+	public String getScreenName() {
+		return screenName;
+	}
+
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
+
+	public String getObjName() {
+		return objName;
+	}
+
+	public void setObjName(String objName) {
+		this.objName = objName;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+	
+	
 }
