@@ -34,6 +34,8 @@
        <commons.jexl.version>2.1.1</commons.jexl.version>
        <commons.vfs2.version>2.0</commons.vfs2.version>
        <xml.resolver.version>1.2</xml.resolver.version>
+       <selenium.version>2.48.2</selenium.version>
+       <appium.client.version>3.3.0</appium.client.version>
     </properties>
     
     <build>
@@ -138,6 +140,32 @@
         </repositories>
   
   <dependencies>
+  
+  <dependency>
+  <groupId>io.appium</groupId>
+  <artifactId>java-client</artifactId>
+  <version>${appium.client.version}</version>
+  <exclusions>
+    <exclusion>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+  
+  <dependency>
+	<groupId>org.seleniumhq.selenium</groupId>
+	<artifactId>selenium-java</artifactId>
+	<version>${selenium.version}</version>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.seleniumhq.selenium</groupId>
+	<artifactId>selenium-server</artifactId>
+	<version>${selenium.version}</version>
+</dependency>
+	
+  
   
   <dependency>
 	<groupId>xml-resolver</groupId>
