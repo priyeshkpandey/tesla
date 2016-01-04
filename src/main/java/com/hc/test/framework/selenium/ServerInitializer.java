@@ -167,11 +167,6 @@ public class ServerInitializer {
 		return udid;
     }
     
-    public static void main(String[] args){
-        
-       ClassLoader classLoader = ServerInitializer.class.getClassLoader();
-	File file = new File(classLoader.getResource("getudid.sh").getFile());
-        System.out.println(file.getAbsoluteFile());
-    }
+    
 
 }
