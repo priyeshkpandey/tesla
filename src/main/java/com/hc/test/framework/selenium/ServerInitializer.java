@@ -23,15 +23,18 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 
 public class ServerInitializer {
 
     WebDriver remoteWebDriver;
     String serverurl;
     DesiredCapabilities desiredCapabilities;
-    String defaultMobileUrl = "http://127.0.0.1:4723/wd/hub";
+    
     
     @Autowired
     @Qualifier("properties")
@@ -45,6 +48,13 @@ public class ServerInitializer {
         this.serverurl = serverurl;
         this.executionPlatform = executionPlatform;
     }
+    
+    static {
+		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
+	}
+
+	public static Logger LOGGER = LoggerFactory
+			.getLogger(ServerInitializer.class);
 
     /*
     //Need to use android and ios driver as below
@@ -59,20 +69,20 @@ public class ServerInitializer {
         switch (executionPlatform.toUpperCase()) {
             case "WEBDRIVER":
                 //Need to call with port number <ipaddress>:4444/wd/hub
-                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), getCapabability(executionPlatform));
+                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + properties.getProperty("webdriverWebUrl")), getCapabability(executionPlatform));
 
             case "ANDROID":
                 if (null == serverurl) {
-                    remoteWebDriver = new AndroidDriver(new URL(defaultMobileUrl), getCapabability(executionPlatform));
+                    LOGGER.error("Server URL is NULL for ANDROID");
                 } else {
-                    remoteWebDriver = new AndroidDriver(new URL(serverurl + ":4723/wd/hub"), getCapabability(executionPlatform));
+                    remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
 
             case "IOS":
                 if (null == serverurl) {
-                    remoteWebDriver = new IOSDriver(new URL(defaultMobileUrl), getCapabability(executionPlatform));
+                	LOGGER.error("Server URL is NULL for IOS");
                 } else {
-                    remoteWebDriver = new IOSDriver(new URL(serverurl + ":4723/wd/hub"), getCapabability(executionPlatform));
+                    remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
 
         }
