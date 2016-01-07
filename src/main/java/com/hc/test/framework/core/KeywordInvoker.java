@@ -1,7 +1,12 @@
 package com.hc.test.framework.core;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 
+import org.apache.commons.configuration2.Configuration;
+import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,19 +17,48 @@ public class KeywordInvoker {
 	}
 
 	public static Logger LOGGER = LoggerFactory.getLogger(KeywordInvoker.class);
+	
+	private AppTypes appType;
+	
+	KeywordInvoker(AppTypes appType)
+	{
+		this.appType = appType;
+	}
 
-	public boolean invokeKeyword(AppTypes appType, HashMap params) {
-		boolean isInvoked = false;
+	public boolean invokeKeyword(String keyword, List<Object> params) {
+		boolean isInvoked = true;
 
 		try {
 			Class c = Class.forName("com.hc.test.framework.keywords."
 					+ appType.keywordClass());
 
-			// TODO: Invocation of keywords and signature specification for
-			// keywords
+			Class[] paramTypes = { Configuration.class, WebDriver.class,
+					String.class, String.class };
+			
+			Method keywordMethod = c.getDeclaredMethod(keyword, paramTypes);
+			isInvoked = (boolean) keywordMethod.invoke(c.newInstance(), params);
 
 		} catch (ClassNotFoundException e) {
 			LOGGER.error(e.getMessage());
+			isInvoked = false;
+		} catch (NoSuchMethodException e) {
+			LOGGER.error(e.getMessage());
+			isInvoked = false;
+		} catch (SecurityException e) {
+			LOGGER.error(e.getMessage());
+			isInvoked = false;
+		} catch (IllegalAccessException e) {
+			LOGGER.error(e.getMessage());
+			isInvoked = false;
+		} catch (IllegalArgumentException e) {
+			LOGGER.error(e.getMessage());
+			isInvoked = false;
+		} catch (InvocationTargetException e) {
+			LOGGER.error(e.getMessage());
+			isInvoked = false;
+		} catch (InstantiationException e) {
+			LOGGER.error(e.getMessage());
+			isInvoked = false;
 		}
 
 		return isInvoked;

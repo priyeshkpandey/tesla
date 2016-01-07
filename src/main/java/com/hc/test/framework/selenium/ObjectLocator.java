@@ -23,7 +23,7 @@ public class ObjectLocator {
 	public static Logger LOGGER = LoggerFactory
 			.getLogger(ObjectLocator.class);
 	
-	ObjectLocator(String objRepoName)
+	public ObjectLocator(String objRepoName)
 	{
 		this.objRepoName = objRepoName;
 	}

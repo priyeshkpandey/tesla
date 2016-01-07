@@ -12,5 +12,9 @@ public interface DataSourceDAO extends JpaRepository<DataSource, Integer> {
 	
 	@Query("from DataSource ds where ds.dataSetId = :dataSetId order by ds.stepSeq")
 	public List<DataSource> getDataIdsByDataSetId(@Param("dataSetId") Long dataSetId);
+	
+	@Query("from DataSource ds where ds.dataSetId = :dataSetId AND ds.stepSeq = :stepSeq")
+	public DataSource getDataIdByDataSetIdAndStepSeq(@Param("dataSetId") Long dataSetId,
+			@Param("stepSeq") Long stepSeq);
 
 }

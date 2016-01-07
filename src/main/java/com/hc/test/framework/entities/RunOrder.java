@@ -2,12 +2,16 @@ package com.hc.test.framework.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.hc.test.framework.core.AppTypes;
 
 @Entity
 @Table(name="run_order")
@@ -49,7 +53,8 @@ public class RunOrder {
 	
 	@Autowired
 	@Column(name="app_type")
-	String appType;
+	@Enumerated(EnumType.STRING)
+	AppTypes appType;
 
 	public Long getId() {
 		return id;
@@ -115,11 +120,11 @@ public class RunOrder {
 		this.runSeq = runSeq;
 	}
 
-	public String getAppType() {
+	public AppTypes getAppType() {
 		return appType;
 	}
 
-	public void setAppType(String appType) {
+	public void setAppType(AppTypes appType) {
 		this.appType = appType;
 	}
 
