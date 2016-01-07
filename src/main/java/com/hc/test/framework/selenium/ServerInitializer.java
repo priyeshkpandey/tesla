@@ -5,13 +5,17 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+
 import org.openqa.selenium.remote.RemoteWebDriver;
+
 import java.net.URL;
 import java.util.Properties;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.OS;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class ServerInitializer {
 
@@ -27,7 +32,9 @@ public class ServerInitializer {
     String serverurl;
     DesiredCapabilities desiredCapabilities;
     String defaultMobileUrl = "http://127.0.0.1:4723/wd/hub";
+    
     @Autowired
+    @Qualifier("properties")
     Properties properties;
     String executionPlatform;
 
