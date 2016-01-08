@@ -94,11 +94,5 @@ public class RequestGenerator {
     }
 
 
-    public static void main(String [] ar) throws IOException {
-        RequestGenerator req=new RequestGenerator("http://localhost:5000/ios/get_udid_ios");
 
-        String json=req.getResponseObject().getBody();
-
-        System.out.println(req.parseJson(json,"error"));
-    }
 }
