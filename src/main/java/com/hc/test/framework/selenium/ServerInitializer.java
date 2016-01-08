@@ -1,5 +1,6 @@
 package com.hc.test.framework.selenium;
 
+import com.hc.test.framework.utils.RequestGenerator;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -7,6 +8,7 @@ import io.appium.java_client.remote.MobilePlatform;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -14,6 +16,7 @@ import java.net.MalformedURLException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Properties;
 
 import org.apache.commons.exec.CommandLine;
@@ -27,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 
 public class ServerInitializer {
@@ -40,13 +45,15 @@ public class ServerInitializer {
     @Qualifier("properties")
     Properties properties;
     String executionPlatform;
+    String targetOs;
 
     public ServerInitializer() {
     }
 
-    public ServerInitializer(String serverurl, String executionPlatform) {
+    public ServerInitializer(String serverurl, String executionPlatform,String targetOs) {
         this.serverurl = serverurl;
         this.executionPlatform = executionPlatform;
+        this.targetOs=targetOs;
     }
     
     static {
@@ -99,12 +106,12 @@ public class ServerInitializer {
                 options.addArguments("test-type");
                 desiredCapabilities = new DesiredCapabilities();
                 desiredCapabilities.setPlatform(Platform.ANY);
-                if (OS.isFamilyWindows()) {
+                if (targetOs.toLowerCase().contains("win")) {
                     System.setProperty("webdriver.chrome.driver", "classpath:chromedriver.exe");
 
                     desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
                     desiredCapabilities.setCapability("webdriver.chrome.driver", "classpath:chromedriver.exe");
-                } else if (OS.isFamilyMac()) {
+                } else if (targetOs.toLowerCase().contains("mac")) {
                     System.setProperty("webdriver.chrome.driver",
                             "classpath:chromedriver-mac");
 
@@ -156,7 +163,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:helpchat.zip");
 
             default:
-            //TODO
+            //TODO  Unknown for now
 
         }
 
@@ -165,25 +172,19 @@ public class ServerInitializer {
 
     public String getDeviceUdid() {
        String udid=null;
-	
-		try{
-		ProcessBuilder ps=new ProcessBuilder("sh","/classpath:getudid.sh");
-		Process p=ps.start();
-		p.waitFor();
-		String output = IOUtils.toString(p.getInputStream());
-		//System.out.println(output);
-		if(output.toLowerCase().contains("no device detected")){
-			System.out.println("No device connected.Continuing with simulator");
-		}else{
-			System.out.println("Found device UDID:"+output);
-			udid=output.trim();
-		}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+        Object[] params =  {serverurl};
+       String localurl= new MessageFormat(properties.getProperty("udidurlpython")).format(params);
+        RequestGenerator req=new RequestGenerator(localurl);
+        if(req.getResponseObject().getStatusCode().value()==200){
+            try {
+                udid=req.parseJson(req.getResponseObject().getBody(),"udid");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            LOGGER.error("No ios device found...Trying with simulator");
+        }
 		return udid;
     }
-    
-    
 
 }
