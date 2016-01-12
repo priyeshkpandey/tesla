@@ -80,11 +80,10 @@ public class ExecutionEngine {
 				ServerInitializer server = new ServerInitializer("http://"
 						+ clientIP, appType.appName(), targetOS);
 				driver = server.getDriver();
-				
+
 				HashMap<Long, Integer> stepsCounts = new HashMap<Long, Integer>();
-				
-				for(TestScript step:scriptSteps)
-				{
+
+				for (TestScript step : scriptSteps) {
 					stepsCounts.put(step.getStepSeq(), 0);
 				}
 
@@ -92,7 +91,6 @@ public class ExecutionEngine {
 
 					ListIterator<TestScript> listIterTS = scriptSteps
 							.listIterator();
-					
 
 					stepsLoop: while (listIterTS.hasNext()) {
 
@@ -123,79 +121,73 @@ public class ExecutionEngine {
 						params.add(driver);
 						params.add(objKey);
 						params.add(dataSource.getValue());
-						
+
 						boolean result = invoker.invokeKeyword(keyword, params);
-						
-						Integer stepCount = stepsCounts.get(scriptStep.getStepSeq());
+
+						Integer stepCount = stepsCounts.get(scriptStep
+								.getStepSeq());
 						stepCount++;
 						stepsCounts.put(scriptStep.getStepSeq(), stepCount);
-						
+
 						try {
-							
+
 							String stepLoop = null;
-							
-							if(result)
-							{
+
+							if (result) {
 								stepLoop = scriptStep.getOnPass();
-							}
-							else
-							{
+							} else {
 								stepLoop = scriptStep.getOnFail();
 							}
-							
+
 							int stepLoopCount = 1;
-							
-							if(stepLoop.contains("loop="))
-							{
+
+							if (stepLoop.contains("loop=")) {
 								String[] refColPairs = stepLoop.split(";");
-								
-								for(String refPair:refColPairs)
-								{
+
+								for (String refPair : refColPairs) {
 									String key = refPair.split("=")[0];
 									String val = refPair.split("=")[1];
-									
-									if(key.equalsIgnoreCase("loop") )
-									{
+
+									if (key.equalsIgnoreCase("loop")) {
 										stepLoopCount = Integer.parseInt(val);
 									}
-									
+
 								}
 							}
-							
-							if(stepCount >= stepLoopCount)
-							{
+
+							if (stepCount >= stepLoopCount) {
 								throw new NoJumpStepException();
 							}
-							
-							Long jumpStep = stepResultHandler(result, scriptSteps, scriptStep);
-							
-							
-							
-							if(jumpStep == null)
-							{
+
+							Long jumpStep = stepResultHandler(result,
+									scriptSteps, scriptStep);
+
+							if (jumpStep == null) {
 								throw new NoJumpStepException();
-							}
-							else
-							{
-								TestScript targetStep = scriptSteps.get(jumpStep.intValue());
+							} else {
+								TestScript targetStep = scriptSteps
+										.get(jumpStep.intValue());
 								listIterTS.set(targetStep);
-								if(listIterTS.hasPrevious())
-								{
+								if (listIterTS.hasPrevious()) {
 									listIterTS.previous();
 								}
-									
+
 							}
 						} catch (IOException e) {
-							LOGGER.error("Step "+scriptStep.getStepSeq()+" failed for the test script "+scriptStep.getId());
+							LOGGER.error("Step " + scriptStep.getStepSeq()
+									+ " failed for the test script "
+									+ scriptStep.getTcId()
+									+ " due to exception " + e.getMessage());
 							break stepsLoop;
 						} catch (NoJumpStepException e) {
 							LOGGER.info(e.getMessage());
-							if(!result)
-							{
+							if (!result) {
+								LOGGER.error("Step " + scriptStep.getStepSeq()
+										+ " failed for the test script "
+										+ scriptStep.getTcId());
 								break stepsLoop;
 							}
 						}
-						
 
 					}
 
@@ -209,114 +201,100 @@ public class ExecutionEngine {
 
 	}
 
-	private Long stepResultHandler(boolean result, List<TestScript> testScript, TestScript step) throws IOException {
-		
+	private Long stepResultHandler(boolean result, List<TestScript> testScript,
+			TestScript step) throws IOException {
+
 		String label = null;
 		String ref = null;
 		Long jumpStep = null;
-		if(result)
-		{
+		if (result) {
 			ref = step.getOnPass();
 			onPassHandler(step);
-		}
-		else
-		{
+		} else {
 			ref = step.getOnFail();
 			onFailHandler(step);
 		}
-		
-		if(ref.contains("ref="))
-		{
+
+		if (ref.contains("ref=")) {
 			String[] refColPairs = ref.split(";");
-			
-			for(String refPair:refColPairs)
-			{
+
+			for (String refPair : refColPairs) {
 				String key = refPair.split("=")[0];
 				String val = refPair.split("=")[1];
-				
-				if(key.equalsIgnoreCase("ref") )
-				{
+
+				if (key.equalsIgnoreCase("ref")) {
 					label = val;
 				}
-				
+
 			}
 		}
-		
-		if(label!=null && !label.equalsIgnoreCase(""))
-		{
+
+		if (label != null && !label.equalsIgnoreCase("")) {
 			jumpStep = getStepSeqFromLabel(label, testScript, result);
 		}
-		
+
 		return jumpStep;
 
 	}
-	
-	private Long getStepSeqFromLabel(String label, List<TestScript> testScript, Boolean isPass)
-	{
+
+	private Long getStepSeqFromLabel(String label, List<TestScript> testScript,
+			Boolean isPass) {
 		Long stepSeq = null;
-		
-		for(TestScript step:testScript)
-		{
+
+		for (TestScript step : testScript) {
 			String ref = null;
-			if(isPass)
-			{
+			if (isPass) {
 				ref = step.getOnPass();
-			}
-			else
-			{
+			} else {
 				ref = step.getOnFail();
 			}
-			
-			if(ref.contains("label="))
-			{
+
+			if (ref.contains("label=")) {
 				String[] refColPairs = ref.split(";");
-				
-				for(String refPair:refColPairs)
-				{
+
+				for (String refPair : refColPairs) {
 					String key = refPair.split("=")[0];
 					String val = refPair.split("=")[1];
-					
-					if(key.equalsIgnoreCase("label") && val.equalsIgnoreCase(label))
-					{
+
+					if (key.equalsIgnoreCase("label")
+							&& val.equalsIgnoreCase(label)) {
 						stepSeq = step.getStepSeq();
 					}
-					
+
 				}
-			}		
-				
+			}
+
 		}
-		
+
 		return stepSeq;
 	}
 
 	private void onPassHandler(TestScript step) throws IOException {
 
-		
-		if(step.getIsScreenshot())
-		{
+		if (step.getIsScreenshot()) {
 			takeScreenshot(step);
 		}
 	}
 
 	private void onFailHandler(TestScript step) throws IOException {
-		
-		
+
 		takeScreenshot(step);
 	}
-	
-	private void takeScreenshot(TestScript step) throws IOException
-	{
-		
+
+	private void takeScreenshot(TestScript step) throws IOException {
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
 		SimpleDateFormat timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		
-		MessageFormat fileName = new MessageFormat(config.getProperty("screenshotLocation"));
-		Object [] formatParams = {dateFormat.format(Calendar.getInstance().getTime()),
-				step.getId(), step.getStepSeq(),
-				timeStamp.format(Calendar.getInstance().getTime())};
-		
-		
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-           FileUtils.copyFile(scrFile, new File(fileName.format(formatParams)));
+
+		MessageFormat fileName = new MessageFormat(
+				config.getProperty("screenshotLocation"));
+		Object[] formatParams = {
+				dateFormat.format(Calendar.getInstance().getTime()),
+				step.getTcId(), step.getStepSeq(),
+				timeStamp.format(Calendar.getInstance().getTime()) };
+
+		File scrFile = ((TakesScreenshot) driver)
+				.getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(scrFile, new File(fileName.format(formatParams)));
 	}
 }
