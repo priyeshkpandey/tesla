@@ -26,11 +26,13 @@ import org.springframework.context.ApplicationContext;
 import com.hc.test.framework.dao.DataSetDAO;
 import com.hc.test.framework.dao.DataSourceDAO;
 import com.hc.test.framework.dao.ObjectActionDAO;
+import com.hc.test.framework.dao.ResultsDAO;
 import com.hc.test.framework.dao.RunOrderDAO;
 import com.hc.test.framework.dao.TestScriptDAO;
 import com.hc.test.framework.entities.DataSet;
 import com.hc.test.framework.entities.DataSource;
 import com.hc.test.framework.entities.ObjectAction;
+import com.hc.test.framework.entities.Results;
 import com.hc.test.framework.entities.RunOrder;
 import com.hc.test.framework.entities.TestScript;
 import com.hc.test.framework.selenium.ObjectLocator;
@@ -61,6 +63,8 @@ public class ExecutionEngine {
 		RunOrderDAO runOrderDAO = context.getBean(RunOrderDAO.class);
 
 		List<RunOrder> runOrder = runOrderDAO.getExecutableTestCases();
+		
+		ResultsDAO resultsDAO = context.getBean(ResultsDAO.class);
 
 		for (RunOrder runOrderRow : runOrder) {
 			TestScriptDAO testScript = context.getBean(TestScriptDAO.class);
@@ -91,10 +95,13 @@ public class ExecutionEngine {
 
 					ListIterator<TestScript> listIterTS = scriptSteps
 							.listIterator();
+					
+					Boolean tcStatus = true;
 
 					stepsLoop: while (listIterTS.hasNext()) {
 
 						TestScript scriptStep = listIterTS.next();
+						
 
 						ObjectActionDAO objActionDAO = context
 								.getBean(ObjectActionDAO.class);
@@ -178,6 +185,8 @@ public class ExecutionEngine {
 									+ " failed for the test script "
 									+ scriptStep.getTcId()
 									+ " due to exception " + e.getMessage());
+							tcStatus = false;
+							logFailedResult(scriptStep,dataSet.getDataSetId(),resultsDAO);
 							break stepsLoop;
 						} catch (NoJumpStepException e) {
 							LOGGER.info(e.getMessage());
@@ -185,10 +194,19 @@ public class ExecutionEngine {
 								LOGGER.error("Step " + scriptStep.getStepSeq()
 										+ " failed for the test script "
 										+ scriptStep.getTcId());
+								tcStatus = false;
+								logFailedResult(scriptStep,dataSet.getDataSetId(),resultsDAO);
 								break stepsLoop;
 							}
 						}
+						
+						
 
+					}
+					
+					if(tcStatus)
+					{
+						logPassedResult(runOrderRow.getTcId(),dataSet.getDataSetId(),resultsDAO);
 					}
 
 				}
@@ -279,6 +297,33 @@ public class ExecutionEngine {
 	private void onFailHandler(TestScript step) throws IOException {
 
 		takeScreenshot(step);
+	}
+	
+	private void logFailedResult(TestScript step, Long dataSetId, ResultsDAO resultsDAO)
+	{
+		Results result = new Results();
+		result.setTcId(step.getTcId());
+		result.setStepSeq(step.getStepSeq());
+		result.setDataSetId(dataSetId);
+		result.setStatus(false);
+		result.setCodeDrop(config.getProperty("codeDrop"));
+		result.setRelease(config.getProperty("release"));
+		result.setTestPhase(config.getProperty("testPhase"));
+		result.setExecutedAt(Calendar.getInstance().getTime());
+		resultsDAO.saveAndFlush(result);
+	}
+	
+	private void logPassedResult(Long tcId, Long dataSetId, ResultsDAO resultsDAO)
+	{
+		Results result = new Results();
+		result.setTcId(tcId);
+		result.setDataSetId(dataSetId);
+		result.setStatus(true);
+		result.setCodeDrop(config.getProperty("codeDrop"));
+		result.setRelease(config.getProperty("release"));
+		result.setTestPhase(config.getProperty("testPhase"));
+		result.setExecutedAt(Calendar.getInstance().getTime());
+		resultsDAO.saveAndFlush(result);
 	}
 
 	private void takeScreenshot(TestScript step) throws IOException {
