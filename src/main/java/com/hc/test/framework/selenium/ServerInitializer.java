@@ -172,8 +172,7 @@ public class ServerInitializer {
 
     public String getDeviceUdid() {
        String udid=null;
-        Object[] params =  {serverurl};
-       String localurl= new MessageFormat(properties.getProperty("udidurlpython")).format(params);
+       String localurl= serverurl+properties.getProperty("udidurlpython");
         RequestGenerator req=new RequestGenerator(localurl);
         if(req.getResponseObject().getStatusCode().value()==200){
             try {
@@ -182,7 +181,7 @@ public class ServerInitializer {
                 e.printStackTrace();
             }
         }else{
-            LOGGER.error("No ios device found...Trying with simulator");
+            LOGGER.debug("No ios device found...Trying with simulator");
         }
 		return udid;
     }

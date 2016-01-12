@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
@@ -79,11 +80,19 @@ public class ExecutionEngine {
 				ServerInitializer server = new ServerInitializer("http://"
 						+ clientIP, appType.appName(), targetOS);
 				driver = server.getDriver();
+				
+				HashMap<Long, Integer> stepsCounts = new HashMap<Long, Integer>();
+				
+				for(TestScript step:scriptSteps)
+				{
+					stepsCounts.put(step.getStepSeq(), 0);
+				}
 
 				for (DataSet dataSet : dataSets) {
 
 					ListIterator<TestScript> listIterTS = scriptSteps
 							.listIterator();
+					
 
 					stepsLoop: while (listIterTS.hasNext()) {
 
@@ -109,7 +118,7 @@ public class ExecutionEngine {
 						String objKey = objAction.getScreenName() + "."
 								+ objAction.getObjName();
 
-						ArrayList params = new ArrayList();
+						ArrayList<Object> params = new ArrayList<Object>();
 						params.add(objRepo);
 						params.add(driver);
 						params.add(objKey);
@@ -117,8 +126,51 @@ public class ExecutionEngine {
 						
 						boolean result = invoker.invokeKeyword(keyword, params);
 						
+						Integer stepCount = stepsCounts.get(scriptStep.getStepSeq());
+						stepCount++;
+						stepsCounts.put(scriptStep.getStepSeq(), stepCount);
+						
 						try {
+							
+							String stepLoop = null;
+							
+							if(result)
+							{
+								stepLoop = scriptStep.getOnPass();
+							}
+							else
+							{
+								stepLoop = scriptStep.getOnFail();
+							}
+							
+							int stepLoopCount = 1;
+							
+							if(stepLoop.contains("loop="))
+							{
+								String[] refColPairs = stepLoop.split(";");
+								
+								for(String refPair:refColPairs)
+								{
+									String key = refPair.split("=")[0];
+									String val = refPair.split("=")[1];
+									
+									if(key.equalsIgnoreCase("loop") )
+									{
+										stepLoopCount = Integer.parseInt(val);
+									}
+									
+								}
+							}
+							
+							if(stepCount >= stepLoopCount)
+							{
+								throw new NoJumpStepException();
+							}
+							
 							Long jumpStep = stepResultHandler(result, scriptSteps, scriptStep);
+							
+							
+							
 							if(jumpStep == null)
 							{
 								throw new NoJumpStepException();
