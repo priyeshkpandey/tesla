@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.hc.test.framework.dao.DataSetDAO;
 import com.hc.test.framework.dao.DataSourceDAO;
@@ -38,6 +39,7 @@ import com.hc.test.framework.entities.TestScript;
 import com.hc.test.framework.selenium.ObjectLocator;
 import com.hc.test.framework.selenium.ServerInitializer;
 
+@Component
 public class ExecutionEngine {
 
 	@Autowired
