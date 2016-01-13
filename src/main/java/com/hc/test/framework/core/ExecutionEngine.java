@@ -52,6 +52,9 @@ public class ExecutionEngine {
 	private WebDriver driver;
 
 	private AppTypes appType;
+	
+	private String env;
+	private Boolean isOnlyAppType;
 
 	static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
@@ -64,7 +67,16 @@ public class ExecutionEngine {
 
 		RunOrderDAO runOrderDAO = context.getBean(RunOrderDAO.class);
 
-		List<RunOrder> runOrder = runOrderDAO.getExecutableTestCases();
+		List<RunOrder> runOrder = null;
+		
+		if(isOnlyAppType)
+		{
+			runOrder = runOrderDAO.getExecutableTestCasesByAppType(appType);
+		}
+		else
+		{
+			runOrder = runOrderDAO.getExecutableTestCases();
+		}
 		
 		ResultsDAO resultsDAO = context.getBean(ResultsDAO.class);
 
@@ -312,6 +324,7 @@ public class ExecutionEngine {
 		result.setRelease(config.getProperty("release"));
 		result.setTestPhase(config.getProperty("testPhase"));
 		result.setExecutedAt(Calendar.getInstance().getTime());
+		result.setEnv(env);
 		resultsDAO.saveAndFlush(result);
 	}
 	
@@ -325,6 +338,7 @@ public class ExecutionEngine {
 		result.setRelease(config.getProperty("release"));
 		result.setTestPhase(config.getProperty("testPhase"));
 		result.setExecutedAt(Calendar.getInstance().getTime());
+		result.setEnv(env);
 		resultsDAO.saveAndFlush(result);
 	}
 
@@ -344,4 +358,32 @@ public class ExecutionEngine {
 				.getScreenshotAs(OutputType.FILE);
 		FileUtils.copyFile(scrFile, new File(fileName.format(formatParams)));
 	}
+
+	public String getEnv() {
+		return env;
+	}
+
+	public void setEnv(String env) {
+		this.env = env;
+	}
+
+	
+
+	public Boolean getIsOnlyAppType() {
+		return isOnlyAppType;
+	}
+
+	public void setIsOnlyAppType(Boolean isOnlyAppType) {
+		this.isOnlyAppType = isOnlyAppType;
+	}
+
+	public AppTypes getAppType() {
+		return appType;
+	}
+
+	public void setAppType(AppTypes appType) {
+		this.appType = appType;
+	}
+	
+	
 }

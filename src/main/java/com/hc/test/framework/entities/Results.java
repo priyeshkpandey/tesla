@@ -41,6 +41,9 @@ public class Results {
 	
 	@Column(name="code_drop")
 	String codeDrop;
+	
+	@Column(name="environment")
+	String env;
 
 	public Long getId() {
 		return id;
@@ -112,6 +115,14 @@ public class Results {
 
 	public void setCodeDrop(String codeDrop) {
 		this.codeDrop = codeDrop;
+	}
+
+	public String getEnv() {
+		return env;
+	}
+
+	public void setEnv(String env) {
+		this.env = env;
 	}
 	
 	

@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.hc.test.framework.core.AppTypes;
 import com.hc.test.framework.core.ExecutionEngine;
 
 
@@ -30,7 +32,8 @@ public class TestFrameworkService {
 	ExecutionEngine execEngine;
 
 	@RequestMapping(method = RequestMethod.POST, value="/init/test")
-	public ResponseEntity<?> initiateTest(HttpServletRequest request)
+	public ResponseEntity<?> initiateTest(HttpServletRequest request,
+			@RequestParam("env") String env, @RequestParam("appType") AppTypes appType)
 	{
 		String ipAddr = request.getHeader("HTTP_X_FORWARDED_FOR");
 		
@@ -60,6 +63,17 @@ public class TestFrameworkService {
         }else{
             os = "UnKnown, More-Info: "+osType;
         }
+		
+		if(env != null)
+		{
+			execEngine.setEnv(env);
+		}
+		
+		if(appType != null)
+		{
+			execEngine.setIsOnlyAppType(true);
+			execEngine.setAppType(appType);
+		}
 		
 		execEngine.mainFlow(ipAddr, os);
 		
