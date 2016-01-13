@@ -36,7 +36,9 @@
       <task:annotation-driven />
 	
 	<context:component-scan base-package="com.hc.test.framework.service,
-	com.hc.test.framework.core,com.hc.test.framework.utils"/>
+	com.hc.test.framework.core,
+	com.hc.test.framework.utils,
+	com.hc.test.framework.selenium"/>
 	
 	
        <mvc:annotation-driven />
