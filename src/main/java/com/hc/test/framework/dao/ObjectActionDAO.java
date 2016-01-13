@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.hc.test.framework.entities.ObjectAction;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ObjectActionDAO extends JpaRepository<ObjectAction, Integer> {
 
 	@Query("from ObjectAction oa where oa.objActionId = :objActionId")

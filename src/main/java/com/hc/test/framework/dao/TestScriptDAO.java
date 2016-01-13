@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.hc.test.framework.entities.TestScript;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TestScriptDAO extends JpaRepository<TestScript, Integer> {
 
 	@Query("from TestScript ts where ts.tcId = :tcId order by ts.stepSeq ")

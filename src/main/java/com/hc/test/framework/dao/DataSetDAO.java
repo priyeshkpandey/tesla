@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.hc.test.framework.entities.DataSet;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface DataSetDAO extends JpaRepository<DataSet, Integer> {
 	
 	@Query("from DataSet ds where ds.tcId = :tcId AND ds.isExecute = 1")

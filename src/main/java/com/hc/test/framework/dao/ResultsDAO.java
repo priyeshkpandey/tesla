@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.hc.test.framework.entities.Results;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ResultsDAO extends JpaRepository<Results, Integer> {
 
 	@Query("from Results r where r.release = :release")
