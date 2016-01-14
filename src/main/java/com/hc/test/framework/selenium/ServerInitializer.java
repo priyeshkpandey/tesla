@@ -80,6 +80,7 @@ public class ServerInitializer {
             	LOGGER.info(getCapabability(executionPlatform).toString());
                 //Need to call with port number <ipaddress>:4444/wd/hub
                 remoteWebDriver = new RemoteWebDriver(new URL(serverurl + properties.getProperty("webdriverWebUrl")), getCapabability(executionPlatform));
+                break;
 
             case "ANDROID":
                 if (null == serverurl) {
@@ -87,6 +88,7 @@ public class ServerInitializer {
                 } else {
                     remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
+                break;
 
             case "IOS":
                 if (null == serverurl) {
@@ -94,6 +96,7 @@ public class ServerInitializer {
                 } else {
                     remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
+                break;
 
         }
 
