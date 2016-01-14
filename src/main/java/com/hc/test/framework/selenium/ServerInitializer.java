@@ -1,6 +1,7 @@
 package com.hc.test.framework.selenium;
 
 import com.hc.test.framework.utils.RequestGenerator;
+
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -32,8 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class ServerInitializer {
 
     WebDriver remoteWebDriver;
