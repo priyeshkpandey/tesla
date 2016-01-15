@@ -1,16 +1,15 @@
 package com.hc.test.framework.service;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.hc.test.framework.core.AppTypes;
 import com.hc.test.framework.core.ExecutionEngine;
@@ -18,11 +17,12 @@ import com.hc.test.framework.core.ExecutionEngine;
 
 
 
-@Controller
+@RestController
 public class TestFrameworkService {
 	
 	static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
+		System.out.println("test");
 	}
 
 	public static Logger LOGGER = LoggerFactory
@@ -31,19 +31,18 @@ public class TestFrameworkService {
 	@Autowired
 	ExecutionEngine execEngine;
 
-	@RequestMapping(method = RequestMethod.POST, value="/init/test")
-	public ResponseEntity<?> initiateTest(HttpServletRequest request,
+	@RequestMapping(method = RequestMethod.GET, value="/init/test")
+	public ResponseEntity<?> initiateTest(@RequestHeader(value="User-Agent") String osType,
+			@RequestHeader(value="REMOTE_ADDR") String ipAddr,
 			@RequestParam("env") String env, @RequestParam("appType") AppTypes appType)
 	{
-		String ipAddr = request.getHeader("HTTP_X_FORWARDED_FOR");
+		try{
+		System.out.println("Execution started");
 		
-		if(ipAddr == null)
-		{
-			ipAddr = request.getRemoteAddr();
-		}
 		
-		String osType = request.getHeader("User-Agent");
+		
 		String os = null;
+		System.out.println(ipAddr);
 		
 		if (osType.toLowerCase().indexOf("windows") >= 0 )
         {
@@ -51,15 +50,7 @@ public class TestFrameworkService {
         } else if(osType.toLowerCase().indexOf("mac") >= 0)
         {
             os = "Mac";
-        } else if(osType.toLowerCase().indexOf("x11") >= 0)
-        {
-            os = "Unix";
-        } else if(osType.toLowerCase().indexOf("android") >= 0)
-        {
-            os = "Android";
-        } else if(osType.toLowerCase().indexOf("iphone") >= 0)
-        {
-            os = "IPhone";
+        
         }else{
             os = "UnKnown, More-Info: "+osType;
         }
@@ -74,11 +65,13 @@ public class TestFrameworkService {
 			execEngine.setIsOnlyAppType(true);
 			execEngine.setAppType(appType);
 		}
-		
+		System.out.println(os);
 		execEngine.mainFlow(ipAddr, os);
 		
 		
-		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

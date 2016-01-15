@@ -64,7 +64,7 @@ public class KeywordInvoker {
 					String.class, String.class };
 			
 			Method keywordMethod = c.getDeclaredMethod(keyword, paramTypes);
-			isInvoked = (boolean) keywordMethod.invoke(c.newInstance(), params);
+			isInvoked = (boolean) keywordMethod.invoke(c.newInstance(), params.toArray());
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -81,9 +81,11 @@ public class KeywordInvoker {
 			isInvoked = false;
 		} catch (IllegalArgumentException e) {
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 			isInvoked = false;
 		} catch (InvocationTargetException e) {
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 			isInvoked = false;
 		} catch (InstantiationException e) {
 			LOGGER.error(e.getMessage());

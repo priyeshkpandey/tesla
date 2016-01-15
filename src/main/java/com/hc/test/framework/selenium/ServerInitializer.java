@@ -79,7 +79,7 @@ public class ServerInitializer {
             case "WEBDRIVER":
             	LOGGER.info(getCapabability(executionPlatform).toString());
                 //Need to call with port number <ipaddress>:4444/wd/hub
-                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + properties.getProperty("webdriverWebUrl")), getCapabability(executionPlatform));
+                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), getCapabability(executionPlatform));
                 break;
 
             case "ANDROID":
@@ -97,6 +97,8 @@ public class ServerInitializer {
                     remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
                 break;
+                
+                
 
         }
 
@@ -104,8 +106,10 @@ public class ServerInitializer {
     }
 
     public DesiredCapabilities getCapabability(String executionPlatform) {
+    	//desiredCapabilities=new DesiredCapabilities();
 
         switch (executionPlatform.toUpperCase()) {
+        	
 
             case "WEBDRIVER":
                 if (targetOs.toLowerCase().contains("win")) {
@@ -158,6 +162,7 @@ public class ServerInitializer {
                 break;
 
             default:
+            	break;
             //TODO  Unknown for now
 
         }
