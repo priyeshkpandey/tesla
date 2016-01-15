@@ -1,13 +1,13 @@
 Download selenium-server-standalone-2.49.0.jar,chromedriver 2.9 for respective os and follow the steps
 
 1.Open terminal/cmd and type bellow command
-
+---------------------------------------------------------------------------------------
 java -jar selenium-server-standalone-2.49.0.jar -role hub(Note:This command should be executed in staging server.But if you want to run in local just run the command in your system)
----------------------------------------------------------------------------------------
-2.Open another terminal/cmd and then run the following command
 
-java -jar selenium-server-standalone-2.49.0.jar -role node -hub http://<ServerIpAddress>:4444/grid/register  -Dwebdriver.chrome.driver=/path/to/chromedriver -nodeConfig path/to/nodeconfig.json
+2.Open another terminal/cmd and then run the following command
 ---------------------------------------------------------------------------------------
+java -jar selenium-server-standalone-2.49.0.jar -role node -hub http://<ServerIpAddress>:4444/grid/register  -Dwebdriver.chrome.driver=/path/to/chromedriver -nodeConfig path/to/nodeconfig.json
+
 Note: Here <serverIpAddress> is the  Staging ip address.To run in  local just use localhost or 127.0.0.1
 nodeconfig.json is present in the RequiredFiles folder
 
