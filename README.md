@@ -16,8 +16,8 @@ nodeconfig.json is present in the RequiredFiles folder
 
 http://<ServerIPAddress>:8080/TestAutomationFramework/init/test?env=test&appType=WEB
 
-header:
-----------
+header
+
 name:REMOTE_ADDR  value:current system ipaddress
 Ex. REMOTE_ADDR:192.168.100.3
 Here 192.168.100.78 is my laptop ip address
