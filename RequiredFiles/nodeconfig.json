@@ -1,27 +1,54 @@
 {
-	"capabilities": [{
-		"browserName": "chrome",
-		"version": "3.6",
-		"platform": "MAC",
-		"maxInstances": 1
-	}, {
-		"browserName": "firefox",
-		"version": "3.6",
-		"platform": "MAC",
-		"maxInstances": 1
-	}],
-	"configuration": {
-		"nodeTimeout": 900,
-		"browser Timeout": 3000,
-		"port": 5555,
-		"hubPort": 4444,
-		"hubHost": "127.0.0.1",
-		"hub": "http://127.0.0.1:4444/grid/register",
-		"nodePolling": 2000,
-		"registerCycle": 10000,
-		"register": true,
-		"cleanUpCycle": 2000,
-		"timeout": 30000,
-		"maxSession": 1
-	}
+  "capabilities": [
+    {
+      "browserName": "chrome",
+      "version": "3.6",
+      "platform": "MAC",
+      "maxInstances": 1
+    },
+    {
+      "browserName": "firefox",
+      "version": "3.6",
+      "platform": "MAC",
+      "maxInstances": 1
+    },
+    {
+      "browserName": "chrome",
+      "version": "3.6",
+      "platform": "WINDOWS",
+      "maxInstances": 1
+    },
+    {
+      "browserName": "firefox",
+      "version": "3.6",
+      "platform": "WINDOWS",
+      "maxInstances": 1
+    },
+    {
+      "browserName": "chrome",
+      "version": "3.6",
+      "platform": "LINUX",
+      "maxInstances": 1
+    },
+    {
+      "browserName": "firefox",
+      "version": "3.6",
+      "platform": "LINUX",
+      "maxInstances": 1
+    }
+  ],
+  "configuration": {
+    "nodeTimeout": 900,
+    "browser Timeout": 3000,
+    "port": 5555,
+    "hubPort": 4444,
+    "hubHost": "127.0.0.1",
+    "hub": "http://127.0.0.1:4444/grid/register",
+    "nodePolling": 2000,
+    "registerCycle": 10000,
+    "register": true,
+    "cleanUpCycle": 2000,
+    "timeout": 30000,
+    "maxSession": 1
+  }
 }
