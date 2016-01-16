@@ -11,15 +11,14 @@ java -jar selenium-server-standalone-2.49.0.jar -role node -hub http://<ServerIp
 Note: Here <serverIpAddress> is the  Staging ip address.To run in  local just use localhost or 127.0.0.1.
 nodeconfig.json is present in the RequiredFiles folder
 
-3.Build and deploy the projectto the server(tomcat).
-Then in postman hit bellow url with header
-
+3.Build and deploy the projectto the server(tomcat) and  in postman hit bellow url with header
+-------------------------------------------------------------
 http://<ServerIPAddress>:8080/TestAutomationFramework/init/test?env=test&appType=WEB
 
 header
 
 name:REMOTE_ADDR  value:current system ipaddress
-Ex. REMOTE_ADDR:192.168.100.3
+Ex. REMOTE_ADDR:192.168.100.78.
 Here 192.168.100.78 is my laptop ip address
 
 for local just use 127.0.0.1
