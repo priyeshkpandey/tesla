@@ -2,39 +2,39 @@
   "capabilities": [
     {
       "browserName": "chrome",
-      "version": "3.6",
       "platform": "MAC",
-      "maxInstances": 1
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
     },
     {
       "browserName": "firefox",
-      "version": "3.6",
       "platform": "MAC",
-      "maxInstances": 1
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
     },
     {
       "browserName": "chrome",
-      "version": "3.6",
       "platform": "WINDOWS",
-      "maxInstances": 1
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
     },
     {
       "browserName": "firefox",
-      "version": "3.6",
       "platform": "WINDOWS",
-      "maxInstances": 1
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
     },
     {
       "browserName": "chrome",
-      "version": "3.6",
       "platform": "LINUX",
-      "maxInstances": 1
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
     },
     {
       "browserName": "firefox",
-      "version": "3.6",
       "platform": "LINUX",
       "maxInstances": 1
+      "seleniumProtocol": "WebDriver"
     }
   ],
   "configuration": {
