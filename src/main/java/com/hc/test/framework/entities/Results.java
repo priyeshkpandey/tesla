@@ -28,10 +28,10 @@ public class Results {
 	Long dataSetId;
 	
 	@Column(name="status")
-	Boolean status;
+	Integer status;
 	
 	@Column(name="executed_at")
-	Date executedAt;
+	String executedAt;
 	
 	@Column(name="release")
 	String release;
@@ -77,19 +77,19 @@ public class Results {
 		this.dataSetId = dataSetId;
 	}
 
-	public Boolean getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
-	public Date getExecutedAt() {
+	public String getExecutedAt() {
 		return executedAt;
 	}
 
-	public void setExecutedAt(Date executedAt) {
+	public void setExecutedAt(String executedAt) {
 		this.executedAt = executedAt;
 	}
 

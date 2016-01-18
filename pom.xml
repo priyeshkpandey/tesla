@@ -33,7 +33,7 @@
        <commons.jexl.version>2.1.1</commons.jexl.version>
        <commons.vfs2.version>2.0</commons.vfs2.version>
        <xml.resolver.version>1.2</xml.resolver.version>
-       <selenium.version>2.48.2</selenium.version>
+       <selenium.version>2.49.0</selenium.version>
        <appium.client.version>3.3.0</appium.client.version>
        <xml.apis.version>1.4.01</xml.apis.version>
     </properties>
@@ -405,7 +405,31 @@
 	</dependency>
 		
 		
-
   </dependencies>
-  
+  <profiles>
+            <profile>
+                <id>environment-specific</id>
+                <activation>
+                 <activeByDefault>true</activeByDefault>
+                </activation>
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-war-plugin</artifactId>
+                            <version>${version.mvn.war.plugin}</version>
+                            <configuration>
+                                <webResources>
+                                    
+                                    <resource>
+                                        <directory>src/main/resources</directory>
+                                        <targetPath>WEB-INF/classes</targetPath>
+                                    </resource>
+                                </webResources>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </build>
+            </profile>
+        </profiles>
 </project>

@@ -1,0 +1,4 @@
+tcId	company	url	pincode
+tc01	helpchat	http://172.16.1.145:8080/masterdata/v4/company/name/{0}
+tc02	Bhukkad	http://172.16.1.145:8080/masterdata/v4/company/name/{0}	
+tc03		http://172.16.1.145:8080/masterdata/v4/company/name/{0}	560037	

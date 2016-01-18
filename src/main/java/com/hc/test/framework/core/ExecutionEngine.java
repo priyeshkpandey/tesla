@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hc.test.framework.dao.DataSetDAO;
 import com.hc.test.framework.dao.DataSourceDAO;
@@ -162,7 +163,7 @@ public class ExecutionEngine {
 
 							int stepLoopCount = 1;
 
-							if (stepLoop.contains("loop=")) {
+							if (stepLoop != null && stepLoop.contains("loop=")) {
 								String[] refColPairs = stepLoop.split(";");
 
 								for (String refPair : refColPairs) {
@@ -247,7 +248,7 @@ public class ExecutionEngine {
 			onFailHandler(step);
 		}
 
-		if (ref.contains("ref=")) {
+		if (ref != null && ref.contains("ref=")) {
 			String[] refColPairs = ref.split(";");
 
 			for (String refPair : refColPairs) {
@@ -281,7 +282,7 @@ public class ExecutionEngine {
 				ref = step.getOnFail();
 			}
 
-			if (ref.contains("label=")) {
+			if (ref!= null && ref.contains("label=")) {
 				String[] refColPairs = ref.split(";");
 
 				for (String refPair : refColPairs) {
@@ -313,33 +314,35 @@ public class ExecutionEngine {
 		takeScreenshot(step);
 	}
 	
+	@Transactional
 	private void logFailedResult(TestScript step, Long dataSetId, ResultsDAO resultsDAO)
 	{
 		Results result = new Results();
 		result.setTcId(step.getTcId());
 		result.setStepSeq(step.getStepSeq());
 		result.setDataSetId(dataSetId);
-		result.setStatus(false);
+		result.setStatus(0);
 		result.setCodeDrop(config.getProperty("codeDrop"));
 		result.setRelease(config.getProperty("release"));
 		result.setTestPhase(config.getProperty("testPhase"));
-		result.setExecutedAt(Calendar.getInstance().getTime());
+		result.setExecutedAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
 		result.setEnv(env);
-		resultsDAO.saveAndFlush(result);
+		resultsDAO.save(result);
 	}
 	
+	@Transactional
 	private void logPassedResult(Long tcId, Long dataSetId, ResultsDAO resultsDAO)
 	{
 		Results result = new Results();
 		result.setTcId(tcId);
 		result.setDataSetId(dataSetId);
-		result.setStatus(true);
+		result.setStatus(1);
 		result.setCodeDrop(config.getProperty("codeDrop"));
 		result.setRelease(config.getProperty("release"));
 		result.setTestPhase(config.getProperty("testPhase"));
-		result.setExecutedAt(Calendar.getInstance().getTime());
+		result.setExecutedAt(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
 		result.setEnv(env);
-		resultsDAO.saveAndFlush(result);
+		resultsDAO.save(result);
 	}
 
 	private void takeScreenshot(TestScript step) throws IOException {

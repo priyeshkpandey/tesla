@@ -77,8 +77,10 @@ public class ServerInitializer {
     public WebDriver getDriver() throws MalformedURLException {
         switch (executionPlatform.toUpperCase()) {
             case "WEBDRIVER":
+            	LOGGER.info(getCapabability(executionPlatform).toString());
                 //Need to call with port number <ipaddress>:4444/wd/hub
-                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + properties.getProperty("webdriverWebUrl")), getCapabability(executionPlatform));
+                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), getCapabability(executionPlatform));
+                break;
 
             case "ANDROID":
                 if (null == serverurl) {
@@ -86,6 +88,7 @@ public class ServerInitializer {
                 } else {
                     remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
+                break;
 
             case "IOS":
                 if (null == serverurl) {
@@ -93,6 +96,9 @@ public class ServerInitializer {
                 } else {
                     remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
                 }
+                break;
+                
+                
 
         }
 
@@ -100,35 +106,24 @@ public class ServerInitializer {
     }
 
     public DesiredCapabilities getCapabability(String executionPlatform) {
+    	//desiredCapabilities=new DesiredCapabilities();
 
         switch (executionPlatform.toUpperCase()) {
+        	
 
             case "WEBDRIVER":
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("test-type");
-                desiredCapabilities = new DesiredCapabilities();
-                desiredCapabilities.setPlatform(Platform.ANY);
                 if (targetOs.toLowerCase().contains("win")) {
-                    System.setProperty("webdriver.chrome.driver", "classpath:chromedriver.exe");
-
-                    desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
-                    desiredCapabilities.setCapability("webdriver.chrome.driver", "classpath:chromedriver.exe");
+                	desiredCapabilities = DesiredCapabilities.chrome();
+                	desiredCapabilities.setPlatform(Platform.WINDOWS);
+                    
                 } else if (targetOs.toLowerCase().contains("mac")) {
-                    System.setProperty("webdriver.chrome.driver",
-                            "classpath:chromedriver-mac");
-
-                    desiredCapabilities
-                            .setCapability(ChromeOptions.CAPABILITY, options);
-                    desiredCapabilities.setCapability("webdriver.chrome.driver",
-                            "classpath:chromedriver-mac");
+                	desiredCapabilities = DesiredCapabilities.chrome();
+                	desiredCapabilities.setPlatform(Platform.MAC);
                 } else {
-                    System.setProperty("webdriver.chrome.driver",
-                            "classpath:chromedriver-linux");
-                    desiredCapabilities
-                            .setCapability(ChromeOptions.CAPABILITY, options);
-                    desiredCapabilities.setCapability("webdriver.chrome.driver",
-                            "classpath:chromedriver-linux");
+                	desiredCapabilities = DesiredCapabilities.chrome();
+                	desiredCapabilities.setPlatform(Platform.LINUX);
                 }
+                break;
 
             case "ANDROID":
                 desiredCapabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "android");
@@ -141,6 +136,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability(MobileCapabilityType.HAS_TOUCHSCREEN, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.ACCEPT_SSL_CERTS, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:akosha-qa-universal-release.apk");
+                break;
 
             case "IOS":
                 String deviceId = getDeviceUdid();
@@ -163,8 +159,10 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability("showIOSLog", true);
                 desiredCapabilities.setCapability("--force-ipad", false);
                 desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:helpchat.zip");
+                break;
 
             default:
+            	break;
             //TODO  Unknown for now
 
         }

@@ -1,0 +1,54 @@
+{
+  "capabilities": [
+    {
+      "browserName": "chrome",
+      "platform": "MAC",
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
+    },
+    {
+      "browserName": "firefox",
+      "platform": "MAC",
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
+    },
+    {
+      "browserName": "chrome",
+      "platform": "WINDOWS",
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
+    },
+    {
+      "browserName": "firefox",
+      "platform": "WINDOWS",
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
+    },
+    {
+      "browserName": "chrome",
+      "platform": "LINUX",
+      "maxInstances": 1,
+      "seleniumProtocol": "WebDriver"
+    },
+    {
+      "browserName": "firefox",
+      "platform": "LINUX",
+      "maxInstances": 1
+      "seleniumProtocol": "WebDriver"
+    }
+  ],
+  "configuration": {
+    "nodeTimeout": 900,
+    "browser Timeout": 3000,
+    "port": 5555,
+    "hubPort": 4444,
+    "hubHost": "127.0.0.1",
+    "hub": "http://127.0.0.1:4444/grid/register",
+    "nodePolling": 2000,
+    "registerCycle": 10000,
+    "register": true,
+    "cleanUpCycle": 2000,
+    "timeout": 30000,
+    "maxSession": 1
+  }
+}
