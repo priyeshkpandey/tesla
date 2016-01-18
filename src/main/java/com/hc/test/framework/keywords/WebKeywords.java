@@ -10,7 +10,6 @@ public class WebKeywords extends CustomFunctions {
 	public boolean clickLink(Configuration objRepo, WebDriver driver,
 			String objKey, String data) {
 		
-		
 
 		return true;
 	}
