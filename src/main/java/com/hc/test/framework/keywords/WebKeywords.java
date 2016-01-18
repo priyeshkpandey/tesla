@@ -9,13 +9,6 @@ import com.hc.test.framework.core.CustomFunctions;
 
 public class WebKeywords extends CustomFunctions {
 
-//	public boolean clickLink(Configuration objRepo, WebDriver driver,
-//			String objKey, String data) {
-//		
-//		
-//
-//		return true;
-//	}
 	
 	public boolean input(Configuration objRepo, WebDriver driver, String objKey, String data) {
 		boolean isSuccess = true;
