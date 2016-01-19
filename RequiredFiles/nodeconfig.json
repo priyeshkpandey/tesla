@@ -33,7 +33,7 @@
     {
       "browserName": "firefox",
       "platform": "LINUX",
-      "maxInstances": 1
+      "maxInstances": 1,
       "seleniumProtocol": "WebDriver"
     }
   ],
