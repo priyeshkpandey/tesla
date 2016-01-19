@@ -75,7 +75,7 @@
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="generateDdl" value="true" />
-                <property name="showSql" value="false"/>
+                <property name="showSql" value="true"/>
                 <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
                 <property name="database" value="MYSQL"/>
             </bean>
@@ -86,6 +86,7 @@
                 hibernate.cache.region.factory_class = org.hibernate.cache.ehcache.EhCacheRegionFactory
                 hibernate.cache.use_query_cache = true
                 hibernate.generate_statistics = true
+                hibernate.hbm2ddl.auto=update
             </value>
         </property>
     </bean>

@@ -27,13 +27,13 @@ public class Results {
 	@Column(name="data_set_id")
 	Long dataSetId;
 	
-	@Column(name="status")
+	@Column(name="test_status")
 	Integer status;
 	
 	@Column(name="executed_at")
 	String executedAt;
 	
-	@Column(name="release")
+	@Column(name="app_release")
 	String release;
 	
 	@Column(name="test_phase")
