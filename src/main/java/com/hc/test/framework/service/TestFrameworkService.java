@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hc.test.framework.core.AppTypes;
 import com.hc.test.framework.core.ExecutionEngine;
 
-
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 
 @RestController
 public class TestFrameworkService {
-	
+
 	static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
 		System.out.println("test");
@@ -27,22 +29,21 @@ public class TestFrameworkService {
 
 	public static Logger LOGGER = LoggerFactory
 			.getLogger(TestFrameworkService.class);
-	
+
 	@Autowired
 	ExecutionEngine execEngine;
 
 	@RequestMapping(method = RequestMethod.GET, value="/init/test")
-	public ResponseEntity<?> initiateTest(@RequestHeader(value="User-Agent") String osType,
-			@RequestHeader(value="REMOTE_ADDR") String ipAddr,
-			@RequestParam("env") String env, @RequestParam("appType") AppTypes appType)
+	public ResponseEntity<?> initiateTest(@Context HttpServletRequest httpServletRequest
+			,@RequestHeader(value="User-Agent") String osType, @RequestParam("env") String env, @RequestParam("appType") AppTypes appType)
 	{
 		try{
-		System.out.println("Execution started");
-		
-		
-		
+		LOGGER.info("Execution started");
+
+
+		String ipAddr=httpServletRequest.getRemoteAddr();
 		String os = null;
-		System.out.println(ipAddr);
+		LOGGER.info(ipAddr);
 		
 		if (osType.toLowerCase().indexOf("windows") >= 0 )
         {
@@ -67,12 +68,14 @@ public class TestFrameworkService {
 		}
 		System.out.println(os);
 		execEngine.mainFlow(ipAddr, os);
-		
+		return new ResponseEntity<Object>("Execution finished Successfully",HttpStatus.OK);
 		
 		}catch(Exception e){
 			e.printStackTrace();
+            return new ResponseEntity<Object>("Error occured during execution." +
+                    "Please check stacktrace information",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+
 	}
 	
 }
