@@ -15,11 +15,5 @@ nodeconfig.json is present in the RequiredFiles folder
 -------------------------------------------------------------
 http://<ServerIPAddress>:8080/TestAutomationFramework/init/test?env=test&appType=WEB
 
-header
-
-name:REMOTE_ADDR  value:current system ipaddress
-Ex. REMOTE_ADDR:192.168.100.78.
-Here 192.168.100.78 is my laptop ip address
-
 for local just use 127.0.0.1
 
