@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -81,6 +82,7 @@ public class DriverUtils {
                 by=MobileBy.IosUIAutomation(locatorArray[1]);
             default:
                 by = null;
+                LOGGER.error(Arrays.toString(locatorArray)+" is not a valid locator");
                 //break;
 
         }
@@ -92,11 +94,14 @@ public class DriverUtils {
         try {
             if(webDriver instanceof AndroidDriver){
                 element=((AndroidDriver)webDriver).findElement(getLocator());
+                LOGGER.info(getLocator().toString()+" Found");
             }else  if(webDriver instanceof IOSDriver){
                 element=((IOSDriver)webDriver).findElement(getLocator());
+                LOGGER.info(getLocator().toString()+" Found");
             }else {
 
                 element = webDriver.findElement(getLocator());
+                LOGGER.info(getLocator().toString()+" Found");
             }
         } catch (NoSuchElementException nse) {
             nse.printStackTrace();
@@ -112,15 +117,18 @@ public class DriverUtils {
         try {
             if(webDriver instanceof AndroidDriver){
                 elementList=((AndroidDriver)webDriver).findElements(getLocator());
+                LOGGER.info(getLocator().toString()+" List Found");
             }else  if(webDriver instanceof IOSDriver){
                 elementList=((IOSDriver)webDriver).findElements(getLocator());
+                LOGGER.info(getLocator().toString()+" List Found");
             }else {
 
                 elementList = webDriver.findElements(getLocator());
+                LOGGER.info(getLocator().toString()+" List Found");
             }
         } catch (NoSuchElementException nse) {
             nse.printStackTrace();
-            LOGGER.error("Unable to locate element:"+getLocator().toString());
+            LOGGER.error("Unable to locate elementList:"+getLocator().toString());
             element = null;
         }
         return elementList;
