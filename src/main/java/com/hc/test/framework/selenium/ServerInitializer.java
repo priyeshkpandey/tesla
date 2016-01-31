@@ -19,6 +19,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.OS;
@@ -56,6 +57,7 @@ public class ServerInitializer {
         this.serverurl = serverurl;
         this.executionPlatform = executionPlatform;
         this.targetOs=targetOs;
+        desiredCapabilities=getCapabability(executionPlatform);
     }
     
     static {
@@ -79,14 +81,14 @@ public class ServerInitializer {
             case "WEBDRIVER":
             	LOGGER.info(getCapabability(executionPlatform).toString());
                 //Need to call with port number <ipaddress>:4444/wd/hub
-                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), getCapabability(executionPlatform));
+                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), desiredCapabilities);
                 break;
 
             case "ANDROID":
                 if (null == serverurl) {
                     LOGGER.error("Server URL is NULL for ANDROID");
                 } else {
-                    remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
+                    remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), desiredCapabilities);
                 }
                 break;
 
@@ -94,7 +96,7 @@ public class ServerInitializer {
                 if (null == serverurl) {
                 	LOGGER.error("Server URL is NULL for IOS");
                 } else {
-                    remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
+                    remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), desiredCapabilities);
                 }
                 break;
                 
@@ -126,6 +128,7 @@ public class ServerInitializer {
                 break;
 
             case "ANDROID":
+                desiredCapabilities=new DesiredCapabilities();
                 desiredCapabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "android");
                 desiredCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Appium");
                 desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
@@ -135,10 +138,11 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability(MobileCapabilityType.SUPPORTS_JAVASCRIPT, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.HAS_TOUCHSCREEN, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.ACCEPT_SSL_CERTS, true);
-                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:akosha-qa-universal-release.apk");
+                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:"+properties.getProperty("androidBuild"));
                 break;
 
             case "IOS":
+                desiredCapabilities=new DesiredCapabilities();
                 String deviceId = getDeviceUdid();
                 desiredCapabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "");
                 desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "8.4");
@@ -158,7 +162,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability("autoLaunch", true);
                 desiredCapabilities.setCapability("showIOSLog", true);
                 desiredCapabilities.setCapability("--force-ipad", false);
-                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:helpchat.zip");
+                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:"+properties.getProperty("iosBuild"));
                 break;
 
             default:
