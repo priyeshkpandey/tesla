@@ -15,7 +15,7 @@ public class WebKeywords extends CustomFunctions {
 		boolean isSuccess = true;
 		try {
 			DriverUtils driverUtils=new DriverUtils(driver,objRepo,objKey);
-            driverUtils.getWeElement().sendKeys(data);
+            driverUtils.getWebElement().sendKeys(data);
 		} catch (Exception e) {
 			
 			isSuccess = false;

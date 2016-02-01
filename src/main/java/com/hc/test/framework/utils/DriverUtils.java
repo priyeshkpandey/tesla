@@ -90,7 +90,7 @@ public class DriverUtils {
         return by;
     }
 
-    public WebElement getWeElement() {
+    public WebElement getWebElement() {
         try {
             if(webDriver instanceof AndroidDriver){
                 element=((AndroidDriver)webDriver).findElement(getLocator());
