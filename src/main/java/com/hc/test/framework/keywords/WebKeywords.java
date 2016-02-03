@@ -38,6 +38,51 @@ public class WebKeywords extends CustomFunctions {
 	        return isLaunched;
 	    }
 
+	public boolean chkbox_click(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		boolean checkstatus = true;
+		try {
+			DriverUtils driverUtils = new DriverUtils(driver, objRepo, objKey);
+			driverUtils.getWebElement().click();
+			// Thread.sleep(10000);
+		} catch (Exception e) {
+
+			checkstatus = false;
+			e.printStackTrace();
+		}
+
+		return checkstatus;
+	}
+
+	public boolean chkbox_ischecked(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		boolean checkedstatus = true;
+		try {
+			DriverUtils driverUtils = new DriverUtils(driver, objRepo, objKey);
+			checkedstatus = driverUtils.getWebElement().isSelected();
+			// Thread.sleep(10000);
+		} catch (Exception e) {
+
+			checkedstatus = false;
+			e.printStackTrace();
+		}
+
+		return checkedstatus;
+
+	}
+	   	
+	public boolean closebrowser(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		boolean isClosed = true;
+		try {
+			driver.close();
+			driver.quit();
+		} catch (Exception e) {
+
+			isClosed = false;
+			e.printStackTrace();
+		}
+
+		return isClosed;
+	}
+
 	        
 
 }
