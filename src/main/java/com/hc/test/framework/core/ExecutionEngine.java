@@ -49,6 +49,8 @@ public class ExecutionEngine {
 	@Autowired
 	@Qualifier("properties")
 	Properties config;
+	@Autowired
+	ServerInitializer server;
 
 	private WebDriver driver;
 
@@ -96,8 +98,9 @@ public class ExecutionEngine {
 
 			try {
 				appType = runOrderRow.getAppType();
-				ServerInitializer server = new ServerInitializer("http://"
-						+ clientIP, appType.appName(), targetOS);
+				server.setExecutionPlatform(appType.appName());
+				server.setServerurl("http://"+clientIP);
+				server.setTargetOs(targetOS);
 				driver = server.getDriver();
 
 				HashMap<Long, Integer> stepsCounts = new HashMap<Long, Integer>();

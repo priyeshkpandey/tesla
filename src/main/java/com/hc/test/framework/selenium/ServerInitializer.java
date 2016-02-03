@@ -19,6 +19,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.apache.commons.exec.CommandLine;
@@ -28,6 +29,8 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.server.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,26 +42,47 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServerInitializer {
 
-    WebDriver remoteWebDriver;
-    String serverurl;
+    RemoteWebDriver remoteWebDriver;
+
     DesiredCapabilities desiredCapabilities;
-    
+    SessionId driverSession;
     
     @Autowired
     @Qualifier("properties")
-    Properties properties;
+    Properties config;
     String executionPlatform;
     String targetOs;
+    String serverurl;
+
+    public String getExecutionPlatform() {
+        return executionPlatform;
+    }
+
+    public void setExecutionPlatform(String executionPlatform) {
+        this.executionPlatform = executionPlatform;
+    }
+
+    public String getTargetOs() {
+        return targetOs;
+    }
+
+    public void setTargetOs(String targetOs) {
+        this.targetOs = targetOs;
+    }
+
+    public String getServerurl() {
+        return serverurl;
+    }
+
+    public void setServerurl(String serverurl) {
+        this.serverurl = serverurl;
+    }
+
+
 
     public ServerInitializer() {
     }
 
-    public ServerInitializer(String serverurl, String executionPlatform,String targetOs) {
-        this.serverurl = serverurl;
-        this.executionPlatform = executionPlatform;
-        this.targetOs=targetOs;
-        desiredCapabilities=getCapabability(executionPlatform);
-    }
     
     static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
@@ -77,18 +101,22 @@ public class ServerInitializer {
     }
      */
     public WebDriver getDriver() throws MalformedURLException {
+        desiredCapabilities=getCapabability(executionPlatform);
         switch (executionPlatform.toUpperCase()) {
             case "WEBDRIVER":
             	LOGGER.info(getCapabability(executionPlatform).toString());
                 //Need to call with port number <ipaddress>:4444/wd/hub
-                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), desiredCapabilities);
+                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + config.getProperty("webdriverWebUrl")), desiredCapabilities);
+                remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
                 break;
 
             case "ANDROID":
                 if (null == serverurl) {
                     LOGGER.error("Server URL is NULL for ANDROID");
                 } else {
-                    remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), desiredCapabilities);
+                    LOGGER.info(desiredCapabilities.toString());
+                    remoteWebDriver = new AndroidDriver(new URL(serverurl + config.getProperty("webdriverMobUrl")), desiredCapabilities);
+                    remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
                 }
                 break;
 
@@ -96,7 +124,9 @@ public class ServerInitializer {
                 if (null == serverurl) {
                 	LOGGER.error("Server URL is NULL for IOS");
                 } else {
-                    remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), desiredCapabilities);
+                    LOGGER.info(desiredCapabilities.toString());
+                    remoteWebDriver = new IOSDriver(new URL(serverurl + config.getProperty("webdriverMobUrl")), desiredCapabilities);
+                    remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
                 }
                 break;
                 
@@ -138,7 +168,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability(MobileCapabilityType.SUPPORTS_JAVASCRIPT, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.HAS_TOUCHSCREEN, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.ACCEPT_SSL_CERTS, true);
-                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:"+properties.getProperty("androidBuild"));
+                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:"+config.getProperty("androidBuild"));
                 break;
 
             case "IOS":
@@ -152,6 +182,7 @@ public class ServerInitializer {
                     desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone Simulator");
                     desiredCapabilities.setCapability("locationServicesEnabled", true);
                 } else {
+                    LOGGER.info("Device ID:"+deviceId);
                     desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 6");
                     desiredCapabilities.setCapability("udid", deviceId);
                 }
@@ -162,7 +193,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability("autoLaunch", true);
                 desiredCapabilities.setCapability("showIOSLog", true);
                 desiredCapabilities.setCapability("--force-ipad", false);
-                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:"+properties.getProperty("iosBuild"));
+                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:"+config.getProperty("iosBuild"));
                 break;
 
             default:
@@ -176,7 +207,7 @@ public class ServerInitializer {
 
     public String getDeviceUdid() {
        String udid=null;
-       String localurl= serverurl+properties.getProperty("udidurlpython");
+       String localurl= serverurl+config.getProperty("udidurlpython");
         RequestGenerator req=new RequestGenerator(localurl);
         if(req.getResponseObject().getStatusCode().value()==200){
             try {
@@ -189,5 +220,7 @@ public class ServerInitializer {
         }
 		return udid;
     }
+
+
 
 }
