@@ -108,6 +108,7 @@ public class ServerInitializer {
                 //Need to call with port number <ipaddress>:4444/wd/hub
                 remoteWebDriver = new RemoteWebDriver(new URL(serverurl + config.getProperty("webdriverWebUrl")), desiredCapabilities);
                 remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
+                remoteWebDriver.manage().window().maximize();
                 break;
 
             case "ANDROID":
