@@ -13,7 +13,14 @@ nodeconfig.json is present in the RequiredFiles folder
 
 3.Build and deploy the projectto the server(tomcat) and  in postman hit bellow url with header
 -------------------------------------------------------------
-http://<ServerIPAddress>:8080/TestAutomationFramework/init/test?env=test&appType=WEB
+http://<ServerIPAddress>:8080/TestAutomationFramework/init/test?env=test&appType=WEB  
+for local just use 127.0.0.1  
 
-for local just use 127.0.0.1
+4.use header 
+-----------
+build path :path/to/android/ios/build  
+
+Null for WEB and SERVICE for now  
+
+
 
