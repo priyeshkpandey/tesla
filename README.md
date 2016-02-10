@@ -18,7 +18,7 @@ for local just use 127.0.0.1
 
 4.use header 
 -----------
-build path :path/to/android/ios/build  
+buildpath :path/to/android/ios/build  
 
 Null for WEB and SERVICE for now  
 
