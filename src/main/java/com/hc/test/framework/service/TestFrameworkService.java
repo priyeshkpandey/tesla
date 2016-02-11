@@ -1,5 +1,6 @@
 package com.hc.test.framework.service;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import com.hc.test.framework.core.ExecutionEngine;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -36,8 +39,10 @@ public class TestFrameworkService {
 
 	@RequestMapping(method = RequestMethod.GET, value="/init/test")
 	public ResponseEntity<?> initiateTest(@Context HttpServletRequest httpServletRequest
-			,@RequestHeader(value="User-Agent") String osType, @RequestParam("env") String env, @RequestParam("appType") AppTypes appType)
+			,@RequestHeader(value="User-Agent") String osType,
+         @RequestHeader String buildpath,@RequestParam("env") String env, @RequestParam("appType") AppTypes appType)
 	{
+        Long startTime= Calendar.getInstance().getTimeInMillis();
 		try{
 		LOGGER.info("Execution started");
 
@@ -58,6 +63,7 @@ public class TestFrameworkService {
 		}
 		else{
             os = "UnKnown, More-Info: "+osType;
+			LOGGER.warn(os);
         }
 		
 		if(env != null)
@@ -70,14 +76,17 @@ public class TestFrameworkService {
 			execEngine.setIsOnlyAppType(true);
 			execEngine.setAppType(appType);
 		}
-		System.out.println(os);
-		execEngine.mainFlow(ipAddr, os);
-		return new ResponseEntity<Object>("Execution finished Successfully",HttpStatus.OK);
+
+		execEngine.mainFlow(ipAddr, os,buildpath);
+            Long endTime=Calendar.getInstance().getTimeInMillis();
+		return new ResponseEntity<Object>("Execution finished Successfully"+"\n"+"Total time taken:"+
+                TimeUnit.MILLISECONDS.toSeconds(endTime-startTime)+" Seconds"
+                ,HttpStatus.OK);
 		
 		}catch(Exception e){
 			e.printStackTrace();
             return new ResponseEntity<Object>("Error occured during execution." +
-                    "Please check stacktrace information",HttpStatus.INTERNAL_SERVER_ERROR);
+                    "Please check stacktrace information"+"\n\n"+ExceptionUtils.getStackTrace(e),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
