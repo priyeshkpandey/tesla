@@ -44,7 +44,7 @@ public class DriverUtils {
 
     public By getLocator() {
 
-        String locatorArray[] = locator.split("=");
+        String locatorArray[] = locator.split("@=@");
 
         switch (locatorArray[0].toLowerCase()) {
             case "name":
