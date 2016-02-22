@@ -36,6 +36,7 @@
        <selenium.version>2.49.0</selenium.version>
        <appium.client.version>3.3.0</appium.client.version>
        <xml.apis.version>1.4.01</xml.apis.version>
+       <log4j2.version>2.3</log4j2.version>
     </properties>
     
     <build>
@@ -390,6 +391,22 @@
 	<artifactId>spring-data-jpa</artifactId>
 	<version>${version.jpa}</version>
 	</dependency>
+	
+			<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
   
   <dependency>
 			<groupId>junit</groupId>

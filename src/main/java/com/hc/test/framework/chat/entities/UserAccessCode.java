@@ -1,4 +1,4 @@
-package com.hc.test.framework.entities;
+package com.hc.test.framework.chat.entities;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.hc.test.framework.entities.Domain;
 
 @Entity
 @Table(name = "user_access_code")

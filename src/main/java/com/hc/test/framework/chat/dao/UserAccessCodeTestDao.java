@@ -1,11 +1,11 @@
-package com.hc.test.framework.dao;
+package com.hc.test.framework.chat.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.hc.test.framework.entities.UserAccessCode;
+import com.hc.test.framework.chat.entities.UserAccessCode;
 
 @Repository
 public interface UserAccessCodeTestDao extends JpaRepository<UserAccessCode, Integer> {

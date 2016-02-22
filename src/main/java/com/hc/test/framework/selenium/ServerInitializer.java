@@ -172,17 +172,17 @@ public class ServerInitializer {
 
     public String getDeviceUdid() {
        String udid=null;
-       String localurl= serverurl+properties.getProperty("udidurlpython");
-        RequestGenerator req=new RequestGenerator(localurl);
-        if(req.getResponseObject().getStatusCode().value()==200){
-            try {
-                udid=req.parseJson(req.getResponseObject().getBody(),"udid");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else{
-            LOGGER.debug("No ios device found...Trying with simulator");
-        }
+//       String localurl= serverurl+properties.getProperty("udidurlpython");
+//        RequestGenerator req=new RequestGenerator(localurl);
+//        if(req.getResponseObject().getStatusCode().value()==200){
+//            try {
+//                udid=req.parseJson(req.getResponseObject().getBody(),"udid");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }else{
+//            LOGGER.debug("No ios device found...Trying with simulator");
+//        }
 		return udid;
     }
 

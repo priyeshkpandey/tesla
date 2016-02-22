@@ -37,6 +37,7 @@ import com.hc.test.framework.entities.ObjectAction;
 import com.hc.test.framework.entities.Results;
 import com.hc.test.framework.entities.RunOrder;
 import com.hc.test.framework.entities.TestScript;
+import com.hc.test.framework.keywords.ServiceKeywords;
 import com.hc.test.framework.selenium.ObjectLocator;
 import com.hc.test.framework.selenium.ServerInitializer;
 
@@ -61,8 +62,7 @@ public class ExecutionEngine {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
 	}
 
-	public static Logger LOGGER = LoggerFactory
-			.getLogger(ExecutionEngine.class);
+	public static Logger LOGGER = LoggerFactory.getLogger(ExecutionEngine.class);
 
 	public void mainFlow(String clientIP, String targetOS) {
 
@@ -79,17 +79,20 @@ public class ExecutionEngine {
 			runOrder = runOrderDAO.getExecutableTestCases();
 		}
 		
+		LOGGER.info("RunOrder rows returned:"+runOrder.size());
 		ResultsDAO resultsDAO = context.getBean(ResultsDAO.class);
 
 		for (RunOrder runOrderRow : runOrder) {
 			TestScriptDAO testScript = context.getBean(TestScriptDAO.class);
 			List<TestScript> scriptSteps = testScript
 					.getTestScriptStepsByTcId(runOrderRow.getTcId());
-
+			LOGGER.debug("scriptSteps:"+scriptSteps.size());
+			LOGGER.debug("RunOrderRow.getTcId:"+runOrderRow.getTcId());
 			DataSetDAO dataSetDAO = context.getBean(DataSetDAO.class);
 			List<DataSet> dataSets = dataSetDAO
 					.getExecutableDataSetsByTcId(runOrderRow.getTcId());
 
+			LOGGER.info("datasets:"+dataSets.size());
 			String objRepoName = runOrderRow.getObjRepoName();
 			ObjectLocator objLoc = new ObjectLocator(objRepoName);
 			Configuration objRepo = objLoc.getObjectsFromRepo();
@@ -114,7 +117,7 @@ public class ExecutionEngine {
 					Boolean tcStatus = true;
 
 					stepsLoop: while (listIterTS.hasNext()) {
-
+						LOGGER.info("ListIterTs:");
 						TestScript scriptStep = listIterTS.next();
 						
 
@@ -124,12 +127,9 @@ public class ExecutionEngine {
 								.getObjectActionById(scriptStep
 										.getObjActionId());
 
-						DataSourceDAO dataSourceDAO = context
-								.getBean(DataSourceDAO.class);
-						DataSource dataSource = dataSourceDAO
-								.getDataIdByDataSetIdAndStepSeq(
-										dataSet.getDataSetId(),
-										scriptStep.getStepSeq());
+						DataSourceDAO dataSourceDAO = context.getBean(DataSourceDAO.class);
+						System.out.println("dataset id:"+dataSet.getDataSetId());
+						DataSource dataSource = dataSourceDAO.getDataIdByDataSetIdAndStepSeq(dataSet.getDataSetId(),scriptStep.getStepSeq());
 
 						// TODO: Step invocation
 
@@ -140,7 +140,7 @@ public class ExecutionEngine {
 
 						ArrayList<Object> params = new ArrayList<Object>();
 						params.add(objRepo);
-						params.add(driver);
+//						params.add(driver);
 						params.add(objKey);
 						params.add(dataSource.getValue());
 

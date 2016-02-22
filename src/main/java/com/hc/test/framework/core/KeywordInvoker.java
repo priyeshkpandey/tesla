@@ -35,28 +35,47 @@ public class KeywordInvoker {
 			
 			if(keyword.equalsIgnoreCase("CustomFunction"))
 			{
-				String customParams = (String)params.get(3);
-				String customFuncName = customParams.split("(")[0];
-				String[] customParamsArray = customParams.split("(")[1].split(",");
-				int noOfParams = customParamsArray.length;
-				customParamsArray[noOfParams-1] = customParamsArray[noOfParams-1].replace(")", " ").trim();
-				Class[] paramTypes = new Class[noOfParams+2];
-				List<Object> customParamsVal = new ArrayList<Object>();
-				paramTypes[0] = Configuration.class;
-				paramTypes[1] = WebDriver.class;
-				int nextIndx = 2;
-				customParamsVal.add(params.get(0));
-				customParamsVal.add(params.get(1));
 				
+				c = Class.forName("com.hc.test.framework.keywords."
+						+ appType.keywordClass());
+				String customParams = (String)params.get(2);
+				
+				System.out.println("CustomParams:"+params.get(1));
+				String customFuncName = customParams.split("\\(")[0];
+				String[] customParamsArray;
+				String test=customParams.split("\\(")[1].replace("\\)","" );
+				System.out.println("Tested:"+test);
+				customParamsArray = customParams.split("\\(")[1].split(",");
+				
+				int noOfParams = customParamsArray.length;
+				customParamsArray[noOfParams-1] = customParamsArray[noOfParams-1].replace("\\)", " ").trim();
+				Class[] paramTypes = new Class[noOfParams];
+				List<Object> customParamsVal = new ArrayList<Object>();
+//				paramTypes[0] = Configuration.class;
+//				paramTypes[1] = WebDriver.class;
+				int nextIndx = 0;
+//				customParamsVal.add(params.get(0));
+//				customParamsVal.add(params.get(1));
 				
 				for(String param:customParamsArray)
+					
 				{
 					paramTypes[nextIndx] = String.class;
 					customParamsVal.add(param);
+					nextIndx++;
 				}
+				Method customMethod = c.getMethod(customFuncName, paramTypes);
+				System.out.println("CustomParamVals size :"+customParamsVal.size());
+//				System.out.println("CustomParamVals:"+customParamsVal.get(3));
+//				customParamsVal.add(2, "http://172.16.1.113:8080/masterdata/v4/zip");
+//				customParamsVal.add(3, "zipcode=560037");
 				
-				Method customMethod = c.getDeclaredMethod(customFuncName, paramTypes);
-				isInvoked = (boolean)customMethod.invoke(c.newInstance(), customParamsVal);
+//System.out.println("customMethod"+customMethod.getParameterTypes().toString());
+//System.out.println("customMethod"+customMethod.getName().toString());
+//System.out.println("customMethod"+customMethod.getGenericParameterTypes().getClass().getCanonicalName());
+
+
+				isInvoked = (boolean)customMethod.invoke(c.newInstance(), customParamsVal.toArray());
 			}
 			else
 			{
@@ -72,6 +91,7 @@ public class KeywordInvoker {
 			isInvoked = false;
 		} catch (NoSuchMethodException e) {
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 			isInvoked = false;
 		} catch (SecurityException e) {
 			LOGGER.error(e.getMessage());
