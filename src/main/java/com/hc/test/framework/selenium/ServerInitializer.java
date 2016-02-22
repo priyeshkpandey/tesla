@@ -1,62 +1,86 @@
 package com.hc.test.framework.selenium;
 
-import com.hc.test.framework.utils.RequestGenerator;
-
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
-import io.appium.java_client.service.local.AppiumDriverLocalService;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.Properties;
-
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.OS;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.impl.StandardFileSystemManager;
+import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ServerInitializer {
 
-    WebDriver remoteWebDriver;
-    String serverurl;
+    RemoteWebDriver remoteWebDriver;
+
     DesiredCapabilities desiredCapabilities;
-    
+    SessionId driverSession;
     
     @Autowired
     @Qualifier("properties")
-    Properties properties;
+    Properties config;
     String executionPlatform;
     String targetOs;
+    String serverurl;
+    String buildpath;
+
+    public String getExecutionPlatform() {
+        return executionPlatform;
+    }
+
+    public void setExecutionPlatform(String executionPlatform) {
+        this.executionPlatform = executionPlatform;
+    }
+
+    public String getTargetOs() {
+        return targetOs;
+    }
+
+    public void setTargetOs(String targetOs) {
+        this.targetOs = targetOs;
+    }
+
+    public String getServerurl() {
+        return serverurl;
+    }
+
+    public void setServerurl(String serverurl) {
+        this.serverurl = serverurl;
+    }
+
+    public String getBuildpath() {
+        return buildpath;
+    }
+
+    public void setBuildpath(String buildpath) {
+        this.buildpath = buildpath;
+    }
 
     public ServerInitializer() {
     }
 
-    public ServerInitializer(String serverurl, String executionPlatform,String targetOs) {
-        this.serverurl = serverurl;
-        this.executionPlatform = executionPlatform;
-        this.targetOs=targetOs;
-    }
     
     static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
@@ -75,18 +99,23 @@ public class ServerInitializer {
     }
      */
     public WebDriver getDriver() throws MalformedURLException {
+        desiredCapabilities=getCapabability(executionPlatform);
         switch (executionPlatform.toUpperCase()) {
             case "WEBDRIVER":
             	LOGGER.info(getCapabability(executionPlatform).toString());
                 //Need to call with port number <ipaddress>:4444/wd/hub
-                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + ":4444/wd/hub"), getCapabability(executionPlatform));
+                remoteWebDriver = new RemoteWebDriver(new URL(serverurl + config.getProperty("webdriverWebUrl")), desiredCapabilities);
+                remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
+                remoteWebDriver.manage().window().maximize();
                 break;
 
             case "ANDROID":
                 if (null == serverurl) {
                     LOGGER.error("Server URL is NULL for ANDROID");
                 } else {
-                    remoteWebDriver = new AndroidDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
+                    LOGGER.info(desiredCapabilities.toString());
+                    remoteWebDriver = new AndroidDriver(new URL(serverurl + config.getProperty("webdriverMobUrl")), desiredCapabilities);
+                    remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
                 }
                 break;
 
@@ -94,7 +123,10 @@ public class ServerInitializer {
                 if (null == serverurl) {
                 	LOGGER.error("Server URL is NULL for IOS");
                 } else {
-                    remoteWebDriver = new IOSDriver(new URL(serverurl + properties.getProperty("webdriverMobUrl")), getCapabability(executionPlatform));
+                    LOGGER.info(desiredCapabilities.toString());
+                    remoteWebDriver = new IOSDriver(new URL(serverurl + config.getProperty("webdriverMobUrl")), desiredCapabilities);
+
+                    remoteWebDriver.manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
                 }
                 break;
                 
@@ -126,6 +158,7 @@ public class ServerInitializer {
                 break;
 
             case "ANDROID":
+                desiredCapabilities=new DesiredCapabilities();
                 desiredCapabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "android");
                 desiredCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Appium");
                 desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
@@ -135,19 +168,21 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability(MobileCapabilityType.SUPPORTS_JAVASCRIPT, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.HAS_TOUCHSCREEN, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.ACCEPT_SSL_CERTS, true);
-                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:akosha-qa-universal-release.apk");
+                desiredCapabilities.setCapability(MobileCapabilityType.APP,getBuildpath());
                 break;
 
             case "IOS":
+                desiredCapabilities=new DesiredCapabilities();
                 String deviceId = getDeviceUdid();
                 desiredCapabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "");
                 desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "8.4");
                 desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM, Platform.MAC);
                 desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
                 if (null == deviceId) {
-                    desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone Simulator");
+                    desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 6");
                     desiredCapabilities.setCapability("locationServicesEnabled", true);
-                } else {
+               } else {
+                    LOGGER.info("Device ID:"+deviceId);
                     desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 6");
                     desiredCapabilities.setCapability("udid", deviceId);
                 }
@@ -158,7 +193,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability("autoLaunch", true);
                 desiredCapabilities.setCapability("showIOSLog", true);
                 desiredCapabilities.setCapability("--force-ipad", false);
-                desiredCapabilities.setCapability(MobileCapabilityType.APP, "classpath:helpchat.zip");
+                desiredCapabilities.setCapability(MobileCapabilityType.APP, getBuildpath());
                 break;
 
             default:
@@ -172,18 +207,23 @@ public class ServerInitializer {
 
     public String getDeviceUdid() {
        String udid=null;
-//       String localurl= serverurl+properties.getProperty("udidurlpython");
-//        RequestGenerator req=new RequestGenerator(localurl);
-//        if(req.getResponseObject().getStatusCode().value()==200){
-//            try {
-//                udid=req.parseJson(req.getResponseObject().getBody(),"udid");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }else{
-//            LOGGER.debug("No ios device found...Trying with simulator");
-//        }
-		return udid;
+       String localurl= serverurl+config.getProperty("udidurlpython");
+        //RequestGenerator req=new RequestGenerator(localurl);
+        try{
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            HttpGet getRequest = new HttpGet(localurl);
+            HttpResponse response = httpClient.execute(getRequest);
+            if(response.getStatusLine().getStatusCode()==200) {
+                return udid;
+            }
+            else{
+                return null;
+            }
+        }catch (Exception e){
+            return null;
     }
 
+
+    }
 }

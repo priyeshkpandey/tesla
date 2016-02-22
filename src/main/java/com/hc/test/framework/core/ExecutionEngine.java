@@ -50,6 +50,8 @@ public class ExecutionEngine {
 	@Autowired
 	@Qualifier("properties")
 	Properties config;
+	@Autowired
+	ServerInitializer server;
 
 	private WebDriver driver;
 
@@ -64,7 +66,7 @@ public class ExecutionEngine {
 
 	public static Logger LOGGER = LoggerFactory.getLogger(ExecutionEngine.class);
 
-	public void mainFlow(String clientIP, String targetOS) {
+	public void mainFlow(String clientIP, String targetOS,String buildpath) {
 
 		RunOrderDAO runOrderDAO = context.getBean(RunOrderDAO.class);
 
@@ -99,8 +101,10 @@ public class ExecutionEngine {
 
 			try {
 				appType = runOrderRow.getAppType();
-				ServerInitializer server = new ServerInitializer("http://"
-						+ clientIP, appType.appName(), targetOS);
+				server.setExecutionPlatform(appType.appName());
+				server.setServerurl("http://"+clientIP);
+				server.setTargetOs(targetOS);
+				server.setBuildpath(buildpath);
 				driver = server.getDriver();
 
 				HashMap<Long, Integer> stepsCounts = new HashMap<Long, Integer>();

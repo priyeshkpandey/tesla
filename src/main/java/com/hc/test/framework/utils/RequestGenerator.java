@@ -62,7 +62,7 @@ public class RequestGenerator {
 
 
     public String parseJson(String jsonSource, String key) throws IOException {
-        JsonNode valueNode = get(jsonSource, key);
+        JsonNode valueNode = getJsonNode(jsonSource, key);
         if (valueNode != null) {
             return valueNode.textValue();
         }else{
@@ -71,7 +71,7 @@ public class RequestGenerator {
 
     }
 
-    private JsonNode get(String jsonSource, String key) throws IOException {
+    private JsonNode getJsonNode(String jsonSource, String key) throws IOException {
         JsonNode jsonNode = objectMapper.readTree(jsonSource);
         String[] keyTokens = key.split("\\.");
         String keyToken = keyTokens[0];
@@ -88,7 +88,7 @@ public class RequestGenerator {
         }
 
         if (keyTokens.length > 1)
-            return get(value.toString(), key.replaceFirst(keyToken + ".", ""));
+            return getJsonNode(value.toString(), key.replaceFirst(keyToken + ".", ""));
         return value;
     }
 

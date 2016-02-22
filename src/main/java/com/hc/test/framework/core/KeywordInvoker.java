@@ -40,16 +40,15 @@ public class KeywordInvoker {
 						+ appType.keywordClass());
 				String customParams = (String)params.get(2);
 				
-				System.out.println("CustomParams:"+params.get(1));
 				String customFuncName = customParams.split("\\(")[0];
 				String[] customParamsArray;
 				String test=customParams.split("\\(")[1].replace("\\)","" );
-				System.out.println("Tested:"+test);
 				customParamsArray = customParams.split("\\(")[1].split(",");
 				
 				int noOfParams = customParamsArray.length;
 				customParamsArray[noOfParams-1] = customParamsArray[noOfParams-1].replace("\\)", " ").trim();
 				Class[] paramTypes = new Class[noOfParams];
+//				Class[] paramTypes = new Class[noOfParams+2];
 				List<Object> customParamsVal = new ArrayList<Object>();
 //				paramTypes[0] = Configuration.class;
 //				paramTypes[1] = WebDriver.class;
@@ -65,16 +64,6 @@ public class KeywordInvoker {
 					nextIndx++;
 				}
 				Method customMethod = c.getMethod(customFuncName, paramTypes);
-				System.out.println("CustomParamVals size :"+customParamsVal.size());
-//				System.out.println("CustomParamVals:"+customParamsVal.get(3));
-//				customParamsVal.add(2, "http://172.16.1.113:8080/masterdata/v4/zip");
-//				customParamsVal.add(3, "zipcode=560037");
-				
-//System.out.println("customMethod"+customMethod.getParameterTypes().toString());
-//System.out.println("customMethod"+customMethod.getName().toString());
-//System.out.println("customMethod"+customMethod.getGenericParameterTypes().getClass().getCanonicalName());
-
-
 				isInvoked = (boolean)customMethod.invoke(c.newInstance(), customParamsVal.toArray());
 			}
 			else
