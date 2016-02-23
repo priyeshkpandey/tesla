@@ -10,9 +10,17 @@ import org.apache.commons.configuration2.Configuration;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.hc.test.framework.keywords.ServiceKeywords;
+
+@Component
 public class KeywordInvoker {
 
+	@Autowired
+	CustomFunctions customFunctions;
+	
 	static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
 	}
@@ -20,6 +28,11 @@ public class KeywordInvoker {
 	public static Logger LOGGER = LoggerFactory.getLogger(KeywordInvoker.class);
 	
 	private AppTypes appType;
+	
+	KeywordInvoker()
+	{
+		
+	};
 	
 	KeywordInvoker(AppTypes appType)
 	{
@@ -29,15 +42,11 @@ public class KeywordInvoker {
 	public boolean invokeKeyword(String keyword, List<Object> params) {
 		boolean isInvoked = true;
 
-		try {
-			Class c = Class.forName("com.hc.test.framework.keywords."
-					+ appType.keywordClass());
-			
+		try {			
 			if(keyword.equalsIgnoreCase("CustomFunction"))
 			{
 				
-				c = Class.forName("com.hc.test.framework.keywords."
-						+ appType.keywordClass());
+//				c =customFunctions.getClass();
 				String customParams = (String)params.get(2);
 				
 				String customFuncName = customParams.split("\\(")[0];
@@ -60,14 +69,21 @@ public class KeywordInvoker {
 					
 				{
 					paramTypes[nextIndx] = String.class;
+					if(param.contains(")")){
+						int len=param.length();
+						param=param.substring(0, len-1);
+					}
 					customParamsVal.add(param);
 					nextIndx++;
 				}
-				Method customMethod = c.getMethod(customFuncName, paramTypes);
-				isInvoked = (boolean)customMethod.invoke(c.newInstance(), customParamsVal.toArray());
+				
+				Method customMethod = customFunctions.getClass().getMethod(customFuncName, paramTypes);
+				isInvoked = (boolean)customMethod.invoke(customFunctions, customParamsVal.toArray());
 			}
 			else
 			{
+				Class c = Class.forName("com.hc.test.framework.keywords."
+						+ appType.keywordClass());
 			Class[] paramTypes = { Configuration.class, WebDriver.class,
 					String.class, String.class };
 			
@@ -75,10 +91,11 @@ public class KeywordInvoker {
 			isInvoked = (boolean) keywordMethod.invoke(c.newInstance(), params.toArray());
 			}
 
-		} catch (ClassNotFoundException e) {
-			LOGGER.error(e.getMessage());
-			isInvoked = false;
-		} catch (NoSuchMethodException e) {
+//		} catch (ClassNotFoundException e) {
+//			LOGGER.error(e.getMessage());
+//			isInvoked = false;
+//		}
+		}catch (NoSuchMethodException e) {
 			LOGGER.error(e.getMessage());
 			e.printStackTrace();
 			isInvoked = false;
@@ -99,6 +116,9 @@ public class KeywordInvoker {
 		} catch (InstantiationException e) {
 			LOGGER.error(e.getMessage());
 			isInvoked = false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return isInvoked;

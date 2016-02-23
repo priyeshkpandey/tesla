@@ -53,6 +53,9 @@ public class ExecutionEngine {
 	@Autowired
 	ServerInitializer server;
 
+	@Autowired
+	KeywordInvoker keywordInvoker;
+	
 	private WebDriver driver;
 
 	private AppTypes appType;
@@ -88,8 +91,8 @@ public class ExecutionEngine {
 			TestScriptDAO testScript = context.getBean(TestScriptDAO.class);
 			List<TestScript> scriptSteps = testScript
 					.getTestScriptStepsByTcId(runOrderRow.getTcId());
-			LOGGER.debug("scriptSteps:"+scriptSteps.size());
-			LOGGER.debug("RunOrderRow.getTcId:"+runOrderRow.getTcId());
+			LOGGER.info("RunOrderRow.getTcId:"+runOrderRow.getTcId());
+			LOGGER.info("scriptSteps:"+scriptSteps.size());
 			DataSetDAO dataSetDAO = context.getBean(DataSetDAO.class);
 			List<DataSet> dataSets = dataSetDAO
 					.getExecutableDataSetsByTcId(runOrderRow.getTcId());
@@ -132,12 +135,11 @@ public class ExecutionEngine {
 										.getObjActionId());
 
 						DataSourceDAO dataSourceDAO = context.getBean(DataSourceDAO.class);
-						System.out.println("dataset id:"+dataSet.getDataSetId());
 						DataSource dataSource = dataSourceDAO.getDataIdByDataSetIdAndStepSeq(dataSet.getDataSetId(),scriptStep.getStepSeq());
 
 						// TODO: Step invocation
 
-						KeywordInvoker invoker = new KeywordInvoker(appType);
+//						KeywordInvoker invoker = new KeywordInvoker(appType);
 						String keyword = objAction.getAction();
 						String objKey = objAction.getScreenName() + "."
 								+ objAction.getObjName();
@@ -147,8 +149,8 @@ public class ExecutionEngine {
 //						params.add(driver);
 						params.add(objKey);
 						params.add(dataSource.getValue());
-
-						boolean result = invoker.invokeKeyword(keyword, params);
+						LOGGER.info("datasource:"+dataSource.getValue());
+						boolean result = keywordInvoker.invokeKeyword(keyword, params);
 
 						Integer stepCount = stepsCounts.get(scriptStep
 								.getStepSeq());
@@ -181,7 +183,7 @@ public class ExecutionEngine {
 								}
 							}
 
-							if (stepCount >= stepLoopCount) {
+							if (stepCount > stepLoopCount) {
 								throw new NoJumpStepException();
 							}
 
@@ -208,6 +210,7 @@ public class ExecutionEngine {
 							logFailedResult(scriptStep,dataSet.getDataSetId(),resultsDAO);
 							break stepsLoop;
 						} catch (NoJumpStepException e) {
+//							e.printStackTrace();
 							LOGGER.info(e.getMessage());
 							if (!result) {
 								LOGGER.error("Step " + scriptStep.getStepSeq()
@@ -390,7 +393,5 @@ public class ExecutionEngine {
 
 	public void setAppType(AppTypes appType) {
 		this.appType = appType;
-	}
-	
-	
+	}	
 }
