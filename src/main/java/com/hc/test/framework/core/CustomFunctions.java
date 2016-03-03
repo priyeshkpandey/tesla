@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hc.test.framework.chat.dao.UserAccessCodeTestDao;
 import com.hc.test.framework.chat.entities.UserAccessCode;
-import com.hc.test.framework.keywords.Test;
+
 import com.hc.test.framework.utils.PropertiesUtil;
 
 @Component
