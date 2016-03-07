@@ -26,14 +26,23 @@ public class KeywordInvoker {
 	}
 
 	public static Logger LOGGER = LoggerFactory.getLogger(KeywordInvoker.class);
-	
+
+	public AppTypes getAppType() {
+		return appType;
+	}
+
+	public void setAppType(AppTypes appType) {
+		this.appType = appType;
+	}
+
 	private AppTypes appType;
 	
 	KeywordInvoker()
 	{
 		
 	};
-	
+
+
 	KeywordInvoker(AppTypes appType)
 	{
 		this.appType = appType;
@@ -83,7 +92,7 @@ public class KeywordInvoker {
 			else
 			{
 				Class c = Class.forName("com.hc.test.framework.keywords."
-						+ appType.keywordClass());
+						+ getAppType().keywordClass());
 			Class[] paramTypes = { Configuration.class, WebDriver.class,
 					String.class, String.class };
 			

@@ -140,13 +140,14 @@ public class ExecutionEngine {
 						// TODO: Step invocation
 
 //						KeywordInvoker invoker = new KeywordInvoker(appType);
+						keywordInvoker.setAppType(appType);
 						String keyword = objAction.getAction();
 						String objKey = objAction.getScreenName() + "."
 								+ objAction.getObjName();
 
 						ArrayList<Object> params = new ArrayList<Object>();
 						params.add(objRepo);
-//						params.add(driver);
+						params.add(driver);
 						params.add(objKey);
 						params.add(dataSource.getValue());
 						LOGGER.info("datasource:"+dataSource.getValue());
