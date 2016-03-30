@@ -17,13 +17,16 @@ import org.springframework.stereotype.Component;
 
 import com.hc.test.framework.core.CustomFunctions;
 import com.hc.test.framework.utils.PropertiesUtil;
+import com.hc.test.framework.utils.DriverUtils;
+import org.apache.commons.configuration2.Configuration;
+import org.openqa.selenium.WebElement;
 
 @Component
 public class AndroidKeywords extends CustomFunctions {
 
 	@Autowired
 	private PropertiesUtil propUtil;
-
+	DriverUtils driverUtils;
 	static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
 	}
@@ -55,13 +58,13 @@ public class AndroidKeywords extends CustomFunctions {
 			CloseableHttpResponse callbackResponse = httpClient
 					.execute(checkoutCallbackPost);
 			Integer respCode = callbackResponse.getStatusLine().getStatusCode();
-			
+
 			if(!respCode.toString().startsWith("20"))
 			{
 				result = false;
 				LOGGER.error("Response code for checkout callback is "+respCode);
 			}
-			
+
 		} catch (ClientProtocolException e) {
 			result = false;
 			LOGGER.error(e.getMessage());
@@ -75,4 +78,49 @@ public class AndroidKeywords extends CustomFunctions {
 		return result;
 	}
 
+
+
+
+    public boolean enterText(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isLoggedin=true;
+        try {
+            Thread.sleep(5);
+            driverUtils=new DriverUtils(driver, objRepo, objKey);
+            WebElement element=driverUtils.getWebElement();
+            element.clear();
+            element.sendKeys(data);
+
+        }catch (Exception e){
+            isLoggedin=false;
+        }
+        return isLoggedin;
+    }
+
+    public boolean tapOnButton(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isLoggedin=true;
+        try {
+            Thread.sleep(5);
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            WebElement element=driverUtils.getWebElement();
+            element.click();
+
+        }catch (Exception e){
+            isLoggedin=false;
+        }
+        return isLoggedin;
+    }
+
+    public boolean clearText(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isCleared=true;
+        try {
+            Thread.sleep(5);
+            driverUtils=new DriverUtils(driver, objRepo, objKey);
+            driverUtils.getWebElement().clear();
+            ;
+
+        }catch (Exception e){
+            isCleared=false;
+        }
+        return isCleared;
+    }
 }
