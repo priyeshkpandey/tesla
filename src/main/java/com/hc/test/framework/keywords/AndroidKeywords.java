@@ -84,10 +84,10 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean enterText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(5);
+            Thread.sleep(Long.parseLong(propUtil.getProperty("thread.sleep")));
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
-            element.clear();
+            //element.clear();
             element.sendKeys(data);
 
         }catch (Exception e){
@@ -99,7 +99,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean tapOnButton(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(5);
+            Thread.sleep(Long.parseLong(propUtil.getProperty("thread.sleep")));
             driverUtils= new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
             element.click();
@@ -113,10 +113,10 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean clearText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isCleared=true;
         try {
-            Thread.sleep(5);
+            Thread.sleep(Long.parseLong(propUtil.getProperty("thread.sleep")));
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             driverUtils.getWebElement().clear();
-            ;
+
 
         }catch (Exception e){
             isCleared=false;
