@@ -3,6 +3,7 @@ package com.hc.test.framework.keywords;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+import com.hc.test.framework.utils.Constants;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -84,7 +85,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean enterText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(Long.parseLong(propUtil.getProperty("thread.sleep")));
+            Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
             //element.clear();
@@ -99,7 +100,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean tapOnButton(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(Long.parseLong(propUtil.getProperty("thread.sleep")));
+            Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils= new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
             element.click();
@@ -113,7 +114,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean clearText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isCleared=true;
         try {
-            Thread.sleep(Long.parseLong(propUtil.getProperty("thread.sleep")));
+            Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             driverUtils.getWebElement().clear();
 
@@ -123,4 +124,34 @@ public class AndroidKeywords extends CustomFunctions {
         }
         return isCleared;
     }
+
+	public boolean tapOnExpandView(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isTapped=true;
+		try {
+			Thread.sleep(Constants.THREAD_SLEEP);
+			driverUtils= new DriverUtils(driver, objRepo, objKey);
+			WebElement element=driverUtils.getWebElement();
+			element.click();
+
+		}catch (Exception e){
+			isTapped=false;
+		}
+		return isTapped;
+	}
+
+
+	public boolean clickAndEnterText(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isTapped=true;
+		try {
+			Thread.sleep(Constants.THREAD_SLEEP);
+			driverUtils= new DriverUtils(driver, objRepo, objKey);
+			WebElement element=driverUtils.getWebElement();
+			element.click();
+			element.sendKeys(data);
+
+		}catch (Exception e){
+			isTapped=false;
+		}
+		return isTapped;
+	}
 }
