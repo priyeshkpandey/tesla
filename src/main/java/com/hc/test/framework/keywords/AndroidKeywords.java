@@ -163,10 +163,11 @@ public class AndroidKeywords extends CustomFunctions {
         try {
             driverUtils= new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
-            TouchActions actions= new TouchActions(driverUtils.getMobileDriver());
-            actions.singleTap(element).perform();
+            TouchAction actions= new TouchAction(driverUtils.getMobileDriver());
+            actions.tap(element).perform();
         }
         catch (Exception e){
+            e.printStackTrace();
             istappedin=false;
         }
         return istappedin;
