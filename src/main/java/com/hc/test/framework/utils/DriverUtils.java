@@ -3,9 +3,9 @@ package com.hc.test.framework.utils;
 import com.google.common.base.Function;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.apache.commons.configuration2.Configuration;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -34,7 +34,6 @@ public class DriverUtils {
         this.objKey = objKey;
         this.objRepo = objRepo;
         locator = objRepo.getString(objKey);
-        by=getLocator();
 
     }
 
@@ -104,15 +103,9 @@ public class DriverUtils {
         return elementList;
     }
 
-    public AppiumDriver<?> getMobileDriver() {
-        if (webDriver instanceof AndroidDriver) {
-            appiumDriver = (AndroidDriver<?>) webDriver;
+    public MobileDriver getMobileDriver() {
 
-        } else if (webDriver instanceof IOSDriver) {
-            appiumDriver = (IOSDriver<?>) webDriver;
-
-        }
-        return appiumDriver;
+        return (MobileDriver)webDriver;
     }
 
     public  WebElement findElement(final WebDriver webDriver,final By by){
