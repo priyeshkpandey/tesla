@@ -34,6 +34,7 @@ public class DriverUtils {
         this.objKey = objKey;
         this.objRepo = objRepo;
         locator = objRepo.getString(objKey);
+        by=getLocator();
 
     }
 
