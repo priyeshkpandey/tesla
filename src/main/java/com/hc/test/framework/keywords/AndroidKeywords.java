@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import com.hc.test.framework.utils.Constants;
+import com.hc.test.framework.utils.MobileGestures;
 import io.appium.java_client.TouchAction;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.http.client.ClientProtocolException;
@@ -173,4 +174,54 @@ public class AndroidKeywords extends CustomFunctions {
         return istappedin;
     }
 
+	public boolean swipeUp(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeUp(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
+	public boolean swipeDown(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeDown(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
+
+	public boolean swipeLeft(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeLeft(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
+
+	public boolean swipeRight(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeRight(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
 }

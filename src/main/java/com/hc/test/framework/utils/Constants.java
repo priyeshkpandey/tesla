@@ -10,6 +10,7 @@ public class Constants {
     public static final int DEFAULT_POLLING_TIMEOUT=500;
     public static final String PACKAGE_NAME="com.akosha.directtalk";
     public static final String RECHARGE_ACTIVITY="com.akosha.activity.transactions.recharge.RechargeActivity";
+    public static final int SWIPE_DURATION=300;
 
 
 
