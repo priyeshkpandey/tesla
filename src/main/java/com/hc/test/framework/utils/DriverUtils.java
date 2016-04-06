@@ -3,6 +3,7 @@ package com.hc.test.framework.utils;
 import com.google.common.base.Function;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.apache.commons.configuration2.Configuration;
@@ -33,6 +34,7 @@ public class DriverUtils {
         this.objKey = objKey;
         this.objRepo = objRepo;
         locator = objRepo.getString(objKey);
+        by=getLocator();
 
     }
 
@@ -91,57 +93,144 @@ public class DriverUtils {
     }
 
     public WebElement getWebElement() {
-        try {
-            if(webDriver instanceof AndroidDriver){
-                element=((AndroidDriver)webDriver).findElement(getLocator());
-                LOGGER.info(getLocator().toString()+" Found");
-            }else  if(webDriver instanceof IOSDriver){
-                element=((IOSDriver)webDriver).findElement(getLocator());
-                LOGGER.info(getLocator().toString()+" Found");
-            }else {
-
-                element = webDriver.findElement(getLocator());
-                LOGGER.info(getLocator().toString()+" Found");
-            }
-        } catch (NoSuchElementException nse) {
-            nse.printStackTrace();
-            LOGGER.error("Unable to locate element:"+getLocator().toString());
-            element = null;
-        }
-
+        element=findElement(webDriver,by);
 
         return element;
     }
 
     public List<WebElement> getWebElementList() {
-        try {
-            if(webDriver instanceof AndroidDriver){
-                elementList=((AndroidDriver)webDriver).findElements(getLocator());
-                LOGGER.info(getLocator().toString()+" List Found");
-            }else  if(webDriver instanceof IOSDriver){
-                elementList=((IOSDriver)webDriver).findElements(getLocator());
-                LOGGER.info(getLocator().toString()+" List Found");
-            }else {
 
-                elementList = webDriver.findElements(getLocator());
-                LOGGER.info(getLocator().toString()+" List Found");
-            }
-        } catch (NoSuchElementException nse) {
-            nse.printStackTrace();
-            LOGGER.error("Unable to locate elementList:"+getLocator().toString());
-            element = null;
-        }
+        elementList=findelements(webDriver,by);
         return elementList;
     }
 
-    public AppiumDriver<?> getMobileDriver() {
-        if (webDriver instanceof AndroidDriver) {
-            appiumDriver = (AndroidDriver<?>) webDriver;
+    public MobileDriver getMobileDriver() {
 
-        } else if (webDriver instanceof IOSDriver) {
-            appiumDriver = (IOSDriver<?>) webDriver;
-        }
-        return appiumDriver;
+        return (MobileDriver)webDriver;
     }
 
+    public  WebElement findElement(final WebDriver webDriver,final By by){
+        WebElement webElement1;
+
+        if(webDriver instanceof AndroidDriver || webDriver instanceof IOSDriver) {
+
+            webElement1 = new FluentWait<>((AppiumDriver)webDriver)
+                    .withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
+                    .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .ignoring(NoSuchElementException.class)
+                    .ignoring(ElementNotVisibleException.class)
+                    .withMessage("Element could not be found. Finder - " + by.toString())
+                    .until(new Function<AppiumDriver, WebElement>() {
+                        @Override
+                        public WebElement apply(AppiumDriver driver) {
+                            LOGGER.debug("Searching for element - " + by.toString());
+                            driver = (AppiumDriver)webDriver;
+                            return driver.findElement(by);
+                        }
+                    });
+
+
+
+        }else{
+            webElement1=new FluentWait<>(webDriver)
+                    .withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
+                    .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .ignoring(NoSuchElementException.class)
+                    .ignoring(ElementNotVisibleException.class)
+                    .withMessage(
+                            "Element could not be found. Finder - "
+                                    + by.toString())
+                    .until(new Function<WebDriver, WebElement>()
+                    {
+                        @Override
+                        public WebElement apply(WebDriver driver)
+                        {
+                            LOGGER.debug("Searching for element - "
+                                    + by.toString());
+                            driver = webDriver;
+                            return driver.findElement(by);
+                        }
+                    });
+        }
+
+        new FluentWait<>(webElement1)
+                .withTimeout(6, TimeUnit.SECONDS)
+                .pollingEvery(500, TimeUnit.MILLISECONDS)
+                .ignoring(WebDriverException.class)
+                .withMessage(
+                        "Element was not visible. Finder - "
+                                + by.toString())
+                .until(new Function<WebElement, Boolean>()
+                {
+                    @Override
+                    public Boolean apply(WebElement webElement)
+                    {
+                        LOGGER.debug("Checking if element is displayed - "
+                                + by.toString());
+                        return webElement.isDisplayed();
+                    }
+                });
+
+        return webElement1;
+    }
+
+
+    public List<WebElement> findelements(final WebDriver webDriver,final By by){
+        List<WebElement> webElementList;
+        if(webDriver instanceof AndroidDriver || webDriver instanceof IOSDriver){
+
+            webElementList = new FluentWait<>((AppiumDriver)webDriver).withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
+                    .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .ignoring(NoSuchElementException.class)
+                    .ignoring(ElementNotVisibleException.class)
+                    .withMessage("Element could not be found. Finder - " + by.toString())
+                    .until(new Function<AppiumDriver, List<WebElement>>() {
+                        @Override
+                        public List<WebElement> apply(AppiumDriver driver) {
+                            LOGGER.debug("Searching for element - " + by.toString());
+                            driver = (AppiumDriver)webDriver;
+                            return driver.findElements(by);
+                        }
+                    });
+        }else{
+            webElementList = new FluentWait<>(webDriver).withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
+                    .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .ignoring(NoSuchElementException.class)
+                    .ignoring(ElementNotVisibleException.class)
+                    .withMessage("Element could not be found. Finder - " + by.toString())
+                    .until(new Function<WebDriver, List<WebElement>>() {
+                        @Override
+                        public List<WebElement> apply(WebDriver driver) {
+                            LOGGER.debug("Searching for element - " + by.toString());
+                            driver = webDriver;
+                            return driver.findElements(by);
+                        }
+                    });
+
+        }
+
+
+        return webElementList;
+    }
+    public AndroidDriver getAndroidDriver(){
+            return (AndroidDriver) webDriver;
+
+    }
+
+    public IOSDriver getIosDriver(){
+        return (IOSDriver) webDriver;
+
+    }
+
+    public boolean startActivity(String activityName){
+
+
+        try{
+            getAndroidDriver().startActivity(Constants.PACKAGE_NAME,activityName);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
