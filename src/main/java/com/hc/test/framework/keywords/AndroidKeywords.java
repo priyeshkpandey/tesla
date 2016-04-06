@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 
+import com.hc.test.framework.utils.Constants;
+import com.hc.test.framework.utils.MobileGestures;
+import io.appium.java_client.TouchAction;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -13,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.touch.TouchActions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,10 +93,10 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean enterText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(5);
+            Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
-            element.clear();
+            //element.clear();
             element.sendKeys(data);
 
         }catch (Exception e){
@@ -104,7 +108,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean tapOnButton(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(5);
+            Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils= new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
             element.click();
@@ -118,10 +122,10 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean clearText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isCleared=true;
         try {
-            Thread.sleep(5);
+            Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             driverUtils.getWebElement().clear();
-            ;
+
 
         }catch (Exception e){
             isCleared=false;
@@ -165,4 +169,100 @@ public class AndroidKeywords extends CustomFunctions {
     }
     
     
+	public boolean tapOnExpandView(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isTapped=true;
+		try {
+			Thread.sleep(Constants.THREAD_SLEEP);
+			driverUtils= new DriverUtils(driver, objRepo, objKey);
+			WebElement element=driverUtils.getWebElement();
+			element.click();
+
+		}catch (Exception e){
+			isTapped=false;
+		}
+		return isTapped;
+	}
+
+
+	public boolean clickAndEnterText(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isTapped=true;
+		try {
+			Thread.sleep(Constants.THREAD_SLEEP);
+			driverUtils= new DriverUtils(driver, objRepo, objKey);
+			WebElement element=driverUtils.getWebElement();
+			element.click();
+			element.sendKeys(data);
+
+		}catch (Exception e){
+			isTapped=false;
+		}
+		return isTapped;
+	}
+
+
+    public boolean tapOnText(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean istappedin=true;
+        try {
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            WebElement element=driverUtils.getWebElement();
+            TouchAction actions= new TouchAction(driverUtils.getMobileDriver());
+            actions.tap(element).perform();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            istappedin=false;
+        }
+        return istappedin;
+    }
+
+	public boolean swipeUp(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeUp(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
+	public boolean swipeDown(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeDown(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
+
+	public boolean swipeLeft(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeLeft(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
+
+	public boolean swipeRight(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isSwipped=true;
+		try {
+			driverUtils = new DriverUtils(driver, objRepo, objKey);
+			new MobileGestures(driver).swipeRight(driverUtils.getWebElement(),Constants.SWIPE_DURATION);
+		}catch (Exception e){
+			isSwipped=false;
+
+		}
+		return isSwipped;
+
+	}
 }
