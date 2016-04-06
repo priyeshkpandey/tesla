@@ -38,6 +38,8 @@ public class CustomFunctions<V> {
 	private PropertiesUtil properties;
 
     HttpHeaders requestHeaders;
+    
+    public static HashMap<String, Object> masterMap = new HashMap<String, Object>();
 
 //	@Autowired
 //	private CustomFunctions custonFunctions;
