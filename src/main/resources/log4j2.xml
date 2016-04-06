@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<Property name="log-path">/opt/akoshalogs</Property>
+		<Property name="log-level">info</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss} app:TestAutomationFramework %-5level userid:%X{userid} %logger{36}:%L - %msg%n" />
+		</Console>
+<!-- 		 <Console name="slowConsole" target="SYSTEM_OUT">
+%highlight{%d [%t] %-5level: %msg%n%throwable}
+            <PatternLayout pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=black, DEBUG=green, TRACE=blue}"/>
+        </Console> -->
+		<RollingFile name="app-log" fileName="${log-path}/testAutomationFramework.log"
+			filePattern="${log-path}/testAutomationFramework-%d{yyyy-MM-dd}.log.gz" immediateFlush="true">
+			<PatternLayout>
+				<pattern>%d{HH:mm:ss} app:TestAutomationFramework [%t] %-5level userid:%X{userid} %logger{36}:%L - %msg%n
+				
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="${log-level}">
+			<AppenderRef ref="Console" /> 
+			<AppenderRef ref="app-log" />
+		</Root>
+	</Loggers>
+</Configuration>

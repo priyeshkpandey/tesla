@@ -3,6 +3,7 @@ package com.hc.test.framework.keywords;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.http.client.ClientProtocolException;
@@ -10,15 +11,12 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-
-
-
 import com.hc.test.framework.core.CustomFunctions;
 import com.hc.test.framework.utils.PropertiesUtil;
 import com.hc.test.framework.utils.DriverUtils;
@@ -130,6 +128,7 @@ public class AndroidKeywords extends CustomFunctions {
         }
         return isCleared;
     }
+    
     public boolean tapOnTile(Configuration objRepo, WebDriver driver, String objKey, String data) {
         boolean isClicked=false;
 
@@ -143,4 +142,27 @@ public class AndroidKeywords extends CustomFunctions {
         }
         return isClicked;
     }
+    
+    public boolean tapOnRadioButton(Configuration objRepo, WebDriver driver, String objKey, String data) {
+        boolean isClicked=false;
+
+        try {
+
+            driverUtils = new DriverUtils(driver,objRepo,objKey);
+            WebElement parentElement = driverUtils.getWebElement();
+            List<WebElement> childElements = parentElement.findElements(By.className("android.widget.RadioButton"));
+            for(int i=0;i<childElements.size();i++){
+            	if(childElements.get(i).getText().toLowerCase()
+            			.equals(data.toLowerCase())){
+            		childElements.get(i).click();         		
+            		isClicked=true;
+            	}
+            }         
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isClicked;
+    }
+    
+    
 }
