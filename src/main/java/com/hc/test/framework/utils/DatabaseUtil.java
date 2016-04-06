@@ -19,6 +19,7 @@ public class DatabaseUtil {
 	
 	private Connection conn;
 	private Configuration prop;
+	private String schemaName;
 	
 	static {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
@@ -28,6 +29,11 @@ public class DatabaseUtil {
 			.getLogger(DatabaseUtil.class);
 	
 	public DatabaseUtil(String schemaName)
+	{
+		this.schemaName = schemaName;
+	}
+	
+	public void createConnection()
 	{
 		prop = new ReadConfiguration("config").getConfigFile();
 		try {
@@ -44,7 +50,7 @@ public class DatabaseUtil {
 	
 	public HashMap<String, HashMap<String, String>> getQueryResultAsMapForSingleTable(String query)
 	{
-		
+		mapResult.clear();
 		
 		try {
 			PreparedStatement ps = conn.prepareStatement(query);
@@ -55,9 +61,11 @@ public class DatabaseUtil {
 			
 			String tableName = rs.getMetaData().getTableName(1);
 			while(rs.next())
-			for(int i = 1;i<=noOfCols;i++)
 			{
-				results.put(rs.getMetaData().getColumnName(i), rs.getString(i));
+				for(int i = 1;i<=noOfCols;i++)
+				{
+					results.put(rs.getMetaData().getColumnName(i)+i, rs.getString(i));
+				}
 			}
 			mapResult.put(tableName, results);
 			
