@@ -87,6 +87,7 @@ public class AndroidKeywords extends CustomFunctions {
 			HttpPost checkoutCallbackPost = new HttpPost(callbackUrl);
 			CloseableHttpResponse callbackResponse = httpClient
 					.execute(checkoutCallbackPost);
+			LOGGER.info("Callback url:  "+callbackUrl);
 			Integer respCode = callbackResponse.getStatusLine().getStatusCode();
 
 			if (!respCode.toString().startsWith("20")) {

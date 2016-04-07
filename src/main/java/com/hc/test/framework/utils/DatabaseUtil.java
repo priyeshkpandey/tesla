@@ -39,7 +39,7 @@ public class DatabaseUtil {
 		try {
 			Class.forName(prop.getString("jdbc.driver"));
 			conn = DriverManager.getConnection(
-					prop.getString("db.url"+"/"+schemaName),
+					prop.getString("db.url")+"/"+schemaName,
 					prop.getString("db.username"),prop.getString("db.passowrd"));
 		} catch (ClassNotFoundException e) {
 			LOGGER.error(e.getMessage());
@@ -60,12 +60,15 @@ public class DatabaseUtil {
 			int noOfCols = rs.getMetaData().getColumnCount();
 			
 			String tableName = rs.getMetaData().getTableName(1);
+			int rowNum = 1;
 			while(rs.next())
 			{
+
 				for(int i = 1;i<=noOfCols;i++)
 				{
-					results.put(rs.getMetaData().getColumnName(i)+i, rs.getString(i));
+					results.put(rs.getMetaData().getColumnName(i)+rowNum, rs.getString(i));
 				}
+				rowNum++;
 			}
 			mapResult.put(tableName, results);
 			
