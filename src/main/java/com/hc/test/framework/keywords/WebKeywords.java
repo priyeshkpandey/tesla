@@ -5,6 +5,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.hc.test.framework.core.CustomFunctions;
 
@@ -25,7 +27,7 @@ public class WebKeywords extends CustomFunctions {
 		return isSuccess;
 	}
 
-	       public boolean openUrl(Configuration objRepo, WebDriver driver,
+	 public boolean openUrl(Configuration objRepo, WebDriver driver,
 	            String objKey, String data) {
 	        boolean isLaunched = true;
 	        try {
@@ -37,7 +39,38 @@ public class WebKeywords extends CustomFunctions {
 	        }
 	        return isLaunched;
 	    }
+	 
+	 public boolean waitForPresenceofElement(Configuration objRepo, WebDriver driver, String objKey, String data)
+	 {
+		 boolean isSucess = true;
+	   		try {
+	   			DriverUtils driverUtils=new DriverUtils(driver,objRepo,objKey);
+	   			WebDriverWait wait = new WebDriverWait(driver, 60);
+	   			WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(driverUtils.getLocator()));
+	   		} catch (Exception e) {
 
+	   			isSucess = false;
+	   			e.printStackTrace();
+	   		}
+
+	   		return isSucess;
+	 }
+
+	       public boolean click(Configuration objRepo, WebDriver driver, String objKey, String data) {
+	    	   boolean isSucess = true;
+	   		try {
+	   			DriverUtils driverUtils = new DriverUtils(driver, objRepo, objKey);
+	   			driverUtils.getWebElement().click();
+	   			// Thread.sleep(10000);
+	   		} catch (Exception e) {
+
+	   			isSucess = false;
+	   			e.printStackTrace();
+	   		}
+
+	   		return isSucess;
+	   	}
+	       
 	public boolean chkbox_click(Configuration objRepo, WebDriver driver, String objKey, String data) {
 		boolean checkstatus = true;
 		try {
