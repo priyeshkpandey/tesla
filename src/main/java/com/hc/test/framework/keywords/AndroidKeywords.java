@@ -268,7 +268,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			new MobileGestures(driver).swipeUp(driverUtils.getWebElement(),
+			MobileGestures.swipeUp(driverUtils.getWebElement(),
 					Constants.SWIPE_DURATION);
 		} catch (Exception e) {
 			isSwipped = false;
@@ -283,7 +283,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			new MobileGestures(driver).swipeDown(driverUtils.getWebElement(),
+			MobileGestures.swipeDown(driverUtils.getWebElement(),
 					Constants.SWIPE_DURATION);
 		} catch (Exception e) {
 			isSwipped = false;
@@ -298,7 +298,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			new MobileGestures(driver).swipeLeft(driverUtils.getWebElement(),
+			MobileGestures.swipeLeft(driverUtils.getWebElement(),
 					Constants.SWIPE_DURATION);
 		} catch (Exception e) {
 			isSwipped = false;
@@ -313,7 +313,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			new MobileGestures(driver).swipeRight(driverUtils.getWebElement(),
+			MobileGestures.swipeRight(driverUtils.getWebElement(),
 					Constants.SWIPE_DURATION);
 		} catch (Exception e) {
 			isSwipped = false;
