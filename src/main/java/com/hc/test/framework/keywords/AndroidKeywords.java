@@ -168,6 +168,53 @@ public class AndroidKeywords extends CustomFunctions {
         return isClicked;
     }
     
+    public boolean tapOnCheckBox(Configuration objRepo, WebDriver driver, String objKey, String data) {
+        boolean isClicked=false;
+
+        try {
+
+            driverUtils = new DriverUtils(driver,objRepo,objKey);
+            WebElement element = driverUtils.getWebElement();
+            if(data.equals("check")){
+            	LOGGER.info("attribute value:"+element.getAttribute("checked"));
+            	if(element.getAttribute("checked").equals("true")){
+            		isClicked=true;
+            	}else{
+                    if(element.isEnabled()){
+                    	element.click();
+        	            if(element.getAttribute("checked").equals("true") ){
+        	            	isClicked=true;
+        	            }else{
+        	            	LOGGER.info("Unable to select the checkbox:"+objKey);
+        	            }
+                    }else{
+                    	LOGGER.info("Checkbox is not enabled to select:"+objKey);
+                    }
+            	}            		
+            }else if(data.equals("uncheck")){
+            	if(element.getAttribute("checked").equals("false") ){
+            		isClicked=true;
+            	}else{
+                    if(element.isEnabled()){
+                    	element.click();
+        	            if(element.getAttribute("checked").equals("false") ){
+        	            	isClicked=true;
+        	            }else{
+        	            	LOGGER.debug("Unable to deselect the checkbox:"+objKey);
+        	            }
+                    }else{
+                    	LOGGER.debug("Checkbox is not enabled to deselect:"+objKey);
+                    }
+            	} 
+            }
+
+            	
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isClicked;
+    }
+    
     
 	public boolean tapOnExpandView(Configuration objRepo, WebDriver driver, String objKey, String data){
 		boolean isTapped=true;
