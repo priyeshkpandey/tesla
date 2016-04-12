@@ -168,7 +168,6 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability(MobileCapabilityType.SUPPORTS_JAVASCRIPT, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.HAS_TOUCHSCREEN, true);
                 desiredCapabilities.setCapability(MobileCapabilityType.ACCEPT_SSL_CERTS, true);
-                desiredCapabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT,"500");
                 desiredCapabilities.setCapability("autoWebview",true);
                 desiredCapabilities.setCapability(MobileCapabilityType.APP,getBuildpath());
                 break;

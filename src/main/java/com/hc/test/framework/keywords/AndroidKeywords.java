@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -321,6 +322,50 @@ public class AndroidKeywords extends CustomFunctions {
 		}
 		return isSwipped;
 
+	}
+
+	public boolean verifyExactText(Configuration objectRepo,WebDriver driver,String objKey,String data){
+		boolean isEqual=false;
+		String actualText=null;
+		try {
+			driverUtils = new DriverUtils(driver, objectRepo, objKey);
+			 actualText=driverUtils.getWebElement().getText().trim();
+			if(actualText.equals(data)){
+				isEqual= true;
+			}
+		}catch (Exception e){
+			LOGGER.error(actualText+" is not equal with "+data);
+			LOGGER.error("\n"+ExceptionUtils.getStackTrace(e));
+		}
+		return isEqual;
+	}
+
+	public boolean verifyTextByPattern(Configuration objectRepo,WebDriver driver,String objKey,String data){
+		boolean isMatch=false;
+		String actualText;
+		try {
+			driverUtils=new DriverUtils(driver, objectRepo, objKey);
+			actualText=driverUtils.getWebElement().getText();
+			if(actualText.equals(driverUtils.getTextByPattern(actualText,data))){
+				isMatch=true;
+			}
+		}catch (Exception e){
+			LOGGER.error("\n"+ExceptionUtils.getStackTrace(e));
+		}
+		return isMatch;
+	}
+
+
+
+	public boolean endTest(Configuration objectRepo,WebDriver driver,String objKey,String data ){
+		try {
+			driverUtils = new DriverUtils(driver, objectRepo, objKey);
+			driverUtils.endTest();
+			return true;
+		}catch (Exception e){
+			LOGGER.error("\n"+ExceptionUtils.getStackTrace(e));
+			return false;
+		}
 	}
 
 }

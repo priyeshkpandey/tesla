@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DriverUtils {
     public WebDriver webDriver;
@@ -28,6 +30,8 @@ public class DriverUtils {
     AndroidDriver<?> androidDriver;
     IOSDriver<?> iosDriver;
     private AppiumDriver<?> appiumDriver;
+    private Pattern p;
+    private Matcher matcher;
 
     public DriverUtils(WebDriver webDriver, Configuration objRepo, String objKey) {
         this.webDriver = webDriver;
@@ -117,13 +121,12 @@ public class DriverUtils {
             webElement1 = new FluentWait<>((AppiumDriver)webDriver)
                     .withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
                     .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .ignoring(NoSuchElementException.class)
                     .ignoring(ElementNotVisibleException.class)
                     .withMessage("Element could not be found. Finder - " + by.toString())
                     .until(new Function<AppiumDriver, WebElement>() {
                         @Override
                         public WebElement apply(AppiumDriver driver) {
-                            LOGGER.debug("Searching for element - " + by.toString());
+                            System.out.println("Searching for element - " + by.toString());
                             driver = (AppiumDriver)webDriver;
                             return driver.findElement(by);
                         }
@@ -135,7 +138,6 @@ public class DriverUtils {
             webElement1=new FluentWait<>(webDriver)
                     .withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
                     .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .ignoring(NoSuchElementException.class)
                     .ignoring(ElementNotVisibleException.class)
                     .withMessage(
                             "Element could not be found. Finder - "
@@ -145,7 +147,7 @@ public class DriverUtils {
                         @Override
                         public WebElement apply(WebDriver driver)
                         {
-                            LOGGER.debug("Searching for element - "
+                            System.out.println("Searching for element - "
                                     + by.toString());
                             driver = webDriver;
                             return driver.findElement(by);
@@ -165,7 +167,7 @@ public class DriverUtils {
                     @Override
                     public Boolean apply(WebElement webElement)
                     {
-                        LOGGER.debug("Checking if element is displayed - "
+                        System.out.println("Checking if element is displayed - "
                                 + by.toString());
                         return webElement.isDisplayed();
                     }
@@ -181,7 +183,7 @@ public class DriverUtils {
 
             webElementList = new FluentWait<>((AppiumDriver)webDriver).withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
                     .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .ignoring(NoSuchElementException.class)
+
                     .ignoring(ElementNotVisibleException.class)
                     .withMessage("Element could not be found. Finder - " + by.toString())
                     .until(new Function<AppiumDriver, List<WebElement>>() {
@@ -195,7 +197,7 @@ public class DriverUtils {
         }else{
             webElementList = new FluentWait<>(webDriver).withTimeout(Constants.DEFAULT_WAIT_TIMEOUT, TimeUnit.SECONDS)
                     .pollingEvery(Constants.DEFAULT_POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .ignoring(NoSuchElementException.class)
+
                     .ignoring(ElementNotVisibleException.class)
                     .withMessage("Element could not be found. Finder - " + by.toString())
                     .until(new Function<WebDriver, List<WebElement>>() {
@@ -231,6 +233,30 @@ public class DriverUtils {
         }catch (Exception e){
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public String getTextByPattern(String text,String data){
+        String searchedText=null;
+        String key = data.split(",")[0];
+        String pattern = data.split(",")[1];
+        p=Pattern.compile(pattern);
+        matcher=p.matcher(text);
+        if(matcher.find()){
+            searchedText=text.substring(matcher.start(),matcher.end());
+        }else{
+            LOGGER.error("No match found for "+pattern+"in the text "+text);
+        }
+
+        return searchedText;
+    }
+
+    public void endTest(){
+        if(webDriver instanceof AndroidDriver || webDriver instanceof IOSDriver){
+            ((AppiumDriver)webDriver).quit();
+        }else{
+            webDriver.close();
+            webDriver.quit();
         }
     }
 }
