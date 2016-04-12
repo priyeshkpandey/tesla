@@ -143,81 +143,123 @@ public class AndroidKeywords extends CustomFunctions {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
 			WebElement element = driverUtils.getWebElement();
 			// element.clear();
-			element.sendKeys(data);
+			element.sendKeys(data);	
+		}catch (Exception e){
+            isLoggedin=false;
+        }
+        return isLoggedin;
+    }
 
-		} catch (Exception e) {
-			isLoggedin = false;
-		}
-		return isLoggedin;
-	}
+    public boolean tapOnButton(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isLoggedin=true;
+        try {
+            Thread.sleep(Constants.THREAD_SLEEP);
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            WebElement element=driverUtils.getWebElement();
+            element.click();
 
-	public boolean tapOnButton(Configuration objRepo, WebDriver driver,
-			String objKey, String data) {
-		boolean isLoggedin = true;
-		try {
-			Thread.sleep(Constants.THREAD_SLEEP);
-			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			WebElement element = driverUtils.getWebElement();
-			element.click();
+        }catch (Exception e){
+            isLoggedin=false;
+        }
+        return isLoggedin;
+    }
 
-		} catch (Exception e) {
-			isLoggedin = false;
-		}
-		return isLoggedin;
-	}
+    public boolean clearText(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isCleared=true;
+        try {
+            Thread.sleep(Constants.THREAD_SLEEP);
+            driverUtils=new DriverUtils(driver, objRepo, objKey);
+            driverUtils.getWebElement().clear();
 
-	public boolean clearText(Configuration objRepo, WebDriver driver,
-			String objKey, String data) {
-		boolean isCleared = true;
-		try {
-			Thread.sleep(Constants.THREAD_SLEEP);
-			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			driverUtils.getWebElement().clear();
 
-		} catch (Exception e) {
-			isCleared = false;
-		}
-		return isCleared;
-	}
+        }catch (Exception e){
+            isCleared=false;
+        }
+        return isCleared;
+    }
+    
+    public boolean tapOnTile(Configuration objRepo, WebDriver driver, String objKey, String data) {
+        boolean isClicked=false;
 
-	public boolean tapOnTile(Configuration objRepo, WebDriver driver,
-			String objKey, String data) {
-		boolean isClicked = false;
+        try {
 
-		try {
+            driverUtils = new DriverUtils(driver,objRepo,objKey);
+            driverUtils.getWebElement().click();
+            isClicked=true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isClicked;
+    }
+    
+    public boolean tapOnRadioButton(Configuration objRepo, WebDriver driver, String objKey, String data) {
+        boolean isClicked=false;
 
-			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			driverUtils.getWebElement().click();
-			isClicked = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return isClicked;
-	}
+        try {
 
-	public boolean tapOnRadioButton(Configuration objRepo, WebDriver driver,
-			String objKey, String data) {
-		boolean isClicked = false;
+            driverUtils = new DriverUtils(driver,objRepo,objKey);
+            WebElement parentElement = driverUtils.getWebElement();
+            List<WebElement> childElements = parentElement.findElements(By.className("android.widget.RadioButton"));
+            for(int i=0;i<childElements.size();i++){
+            	if(childElements.get(i).getText().toLowerCase()
+            			.equals(data.toLowerCase())){
+            		childElements.get(i).click();         		
+            		isClicked=true;
+            	}
+            }         
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isClicked;
+    }
+    
+    public boolean tapOnCheckBox(Configuration objRepo, WebDriver driver, String objKey, String data) {
+        boolean isClicked=false;
 
-		try {
+        try {
 
-			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			WebElement parentElement = driverUtils.getWebElement();
-			List<WebElement> childElements = parentElement.findElements(By
-					.className("android.widget.RadioButton"));
-			for (int i = 0; i < childElements.size(); i++) {
-				if (childElements.get(i).getText().toLowerCase()
-						.equals(data.toLowerCase())) {
-					childElements.get(i).click();
-					isClicked = true;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return isClicked;
-	}
+            driverUtils = new DriverUtils(driver,objRepo,objKey);
+            WebElement element = driverUtils.getWebElement();
+            if(data.equals("check")){
+            	LOGGER.info("attribute value:"+element.getAttribute("checked"));
+            	if(element.getAttribute("checked").equals("true")){
+            		isClicked=true;
+            	}else{
+                    if(element.isEnabled()){
+                    	element.click();
+        	            if(element.getAttribute("checked").equals("true") ){
+        	            	isClicked=true;
+        	            }else{
+        	            	LOGGER.info("Unable to select the checkbox:"+objKey);
+        	            }
+                    }else{
+                    	LOGGER.info("Checkbox is not enabled to select:"+objKey);
+                    }
+            	}            		
+            }else if(data.equals("uncheck")){
+            	if(element.getAttribute("checked").equals("false") ){
+            		isClicked=true;
+            	}else{
+                    if(element.isEnabled()){
+                    	element.click();
+        	            if(element.getAttribute("checked").equals("false") ){
+        	            	isClicked=true;
+        	            }else{
+        	            	LOGGER.debug("Unable to deselect the checkbox:"+objKey);
+        	            }
+                    }else{
+                    	LOGGER.debug("Checkbox is not enabled to deselect:"+objKey);
+                    }
+            	} 
+            }
 
+            	
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isClicked;
+    }
+    
 	public boolean tapOnExpandView(Configuration objRepo, WebDriver driver,
 			String objKey, String data) {
 		boolean isTapped = true;
