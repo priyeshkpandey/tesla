@@ -225,7 +225,7 @@ public class AndroidKeywords extends CustomFunctions {
             	if(element.getAttribute("checked").equals("true")){
             		isClicked=true;
             	}else{
-                    if(element.isEnabled()){
+                    if(element.getAttribute("enabled").trim().equalsIgnoreCase("true")){
                     	element.click();
         	            if(element.getAttribute("checked").equals("true") ){
         	            	isClicked=true;
