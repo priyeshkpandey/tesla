@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import com.hc.test.framework.utils.Constants;
+import com.hc.test.framework.utils.WaitUtil;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -13,6 +15,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,5 +177,21 @@ public class AndroidKeywords extends CustomFunctions {
         }
         return istappedin;
     }
+
+
+    public boolean hideKeyPad(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean ishidden=true;
+        try {
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            driverUtils.getAndroidDriver().hideKeyboard();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ishidden=false;
+        }
+        return ishidden;
+    }
+
+
 
 }
