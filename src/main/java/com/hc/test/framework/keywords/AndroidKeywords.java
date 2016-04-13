@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.hc.test.framework.utils.Constants;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.ClientProtocolException;
@@ -21,9 +22,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.hc.test.framework.core.CustomFunctions;
-import com.hc.test.framework.utils.Constants;
 import com.hc.test.framework.utils.DatabaseUtil;
 import com.hc.test.framework.utils.DriverUtils;
 import com.hc.test.framework.utils.MobileGestures;
@@ -291,20 +290,36 @@ public class AndroidKeywords extends CustomFunctions {
 		return isTapped;
 	}
 
-	public boolean tapOnText(Configuration objRepo, WebDriver driver,
-			String objKey, String data) {
-		boolean istappedin = true;
-		try {
-			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			WebElement element = driverUtils.getWebElement();
-			TouchAction actions = new TouchAction(driverUtils.getMobileDriver());
-			actions.tap(element).perform();
-		} catch (Exception e) {
-			e.printStackTrace();
-			istappedin = false;
-		}
-		return istappedin;
-	}
+
+    public boolean tapOnText(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean istappedin=true;
+        try {
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            WebElement element=driverUtils.getWebElement();
+            TouchAction actions= new TouchAction(driverUtils.getMobileDriver());
+            actions.tap(element).perform();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            istappedin=false;
+        }
+        return istappedin;
+    }
+
+
+    public boolean hideKeyPad(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean ishidden=true;
+        try {
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            driverUtils.getAndroidDriver().hideKeyboard();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ishidden=false;
+        }
+        return ishidden;
+    }
+
 
 	public boolean swipeUp(Configuration objRepo, WebDriver driver,
 			String objKey, String data) {
