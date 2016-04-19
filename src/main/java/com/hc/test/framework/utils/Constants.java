@@ -6,7 +6,7 @@ package com.hc.test.framework.utils;
 public class Constants {
 
     public static final int DEFAULT_WAIT_TIMEOUT=20;
-    public static final long THREAD_SLEEP=5;
+    public static final long THREAD_SLEEP=500;
     public static final int DEFAULT_POLLING_TIMEOUT=500;
     public static final String PACKAGE_NAME="com.akosha.directtalk";
     public static final String RECHARGE_ACTIVITY="com.akosha.activity.transactions.recharge.RechargeActivity";
