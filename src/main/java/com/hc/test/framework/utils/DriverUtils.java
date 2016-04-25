@@ -8,12 +8,15 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.apache.commons.configuration2.Configuration;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,9 +30,9 @@ public class DriverUtils {
     String locator;
     WebElement element;
     List<WebElement> elementList;
-    AndroidDriver<?> androidDriver;
-    IOSDriver<?> iosDriver;
-    private AppiumDriver<?> appiumDriver;
+    AndroidDriver androidDriver;
+    IOSDriver iosDriver;
+    private AppiumDriver appiumDriver;
     private Pattern p;
     private Matcher matcher;
 
@@ -236,11 +239,16 @@ public class DriverUtils {
         }
     }
 
+    public void getCurrentActivity(){
+
+    }
+
     public String getTextByPattern(String text,String data){
+        String pattern1="/([1-9][0-9]*)|0";
         String searchedText=null;
         String key = data.split(",")[0];
         String pattern = data.split(",")[1];
-        p=Pattern.compile(pattern);
+        p=Pattern.compile(pattern1);
         matcher=p.matcher(text);
         if(matcher.find()){
             searchedText=text.substring(matcher.start(),matcher.end());
@@ -259,4 +267,20 @@ public class DriverUtils {
             webDriver.quit();
         }
     }
+
+    public void switchToContext(String context){
+
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("name", context);
+
+        if(webDriver instanceof AndroidDriver){
+            ((AndroidDriver)webDriver).execute(DriverCommand.SWITCH_TO_CONTEXT,params);
+        }else{
+            ((IOSDriver)webDriver).execute(DriverCommand.SWITCH_TO_CONTEXT,params);
+        }
+    }
+
+
+
+
 }

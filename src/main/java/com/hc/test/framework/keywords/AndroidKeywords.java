@@ -1,15 +1,8 @@
 package com.hc.test.framework.keywords;
 
+import com.hc.test.framework.core.CustomFunctions;
+import com.hc.test.framework.utils.*;
 import io.appium.java_client.TouchAction;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.hc.test.framework.utils.Constants;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.ClientProtocolException;
@@ -22,12 +15,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hc.test.framework.core.CustomFunctions;
-import com.hc.test.framework.utils.DatabaseUtil;
-import com.hc.test.framework.utils.DriverUtils;
-import com.hc.test.framework.utils.MobileGestures;
-import com.hc.test.framework.utils.PropertiesUtil;
-import com.hc.test.framework.utils.ReadConfiguration;
+
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AndroidKeywords extends CustomFunctions {
 
@@ -294,6 +287,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean tapOnText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean istappedin=true;
         try {
+			Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils= new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
             TouchAction actions= new TouchAction(driverUtils.getMobileDriver());
@@ -315,7 +309,7 @@ public class AndroidKeywords extends CustomFunctions {
         }
         catch (Exception e){
             e.printStackTrace();
-            ishidden=false;
+            ishidden=true;
         }
         return ishidden;
     }
@@ -326,8 +320,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			MobileGestures.swipeUp(driverUtils.getWebElement(),
-					Constants.SWIPE_DURATION);
+			MobileGestures.swipeUp(driverUtils.getWebElement());
 		} catch (Exception e) {
 			isSwipped = false;
 
@@ -341,8 +334,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			MobileGestures.swipeDown(driverUtils.getWebElement(),
-					Constants.SWIPE_DURATION);
+			MobileGestures.swipeDown(driverUtils.getWebElement());
 		} catch (Exception e) {
 			isSwipped = false;
 
@@ -356,8 +348,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			MobileGestures.swipeLeft(driverUtils.getWebElement(),
-					Constants.SWIPE_DURATION);
+			MobileGestures.swipeLeft(driverUtils.getWebElement());
 		} catch (Exception e) {
 			isSwipped = false;
 
@@ -371,8 +362,7 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isSwipped = true;
 		try {
 			driverUtils = new DriverUtils(driver, objRepo, objKey);
-			MobileGestures.swipeRight(driverUtils.getWebElement(),
-					Constants.SWIPE_DURATION);
+			MobileGestures.swipeRight(driverUtils.getWebElement());
 		} catch (Exception e) {
 			isSwipped = false;
 
@@ -385,10 +375,12 @@ public class AndroidKeywords extends CustomFunctions {
 		boolean isEqual=false;
 		String actualText=null;
 		try {
+			Thread.sleep(Constants.THREAD_SLEEP);
 			driverUtils = new DriverUtils(driver, objectRepo, objKey);
 			 actualText=driverUtils.getWebElement().getText().trim();
-			if(actualText.equals(data)){
+			if(actualText.toLowerCase().equals(data)){
 				isEqual= true;
+				LOGGER.info(actualText+"Equals to->"+data);
 			}
 		}catch (Exception e){
 			LOGGER.error(actualText+" is not equal with "+data);
@@ -413,7 +405,67 @@ public class AndroidKeywords extends CustomFunctions {
 	}
 
 
+	public boolean pressDeviceBack(Configuration objectRepo,WebDriver driver,String objKey,String data){
+		boolean isClicked=true;
+		String temp=null;
+		String defaultContext="NATIVE_APP";
+		String contextid=null;
+		Set<String> lst;
+		try{
 
+			driverUtils=new DriverUtils(driver, objectRepo, objKey);
+			lst = driverUtils.getAndroidDriver().getContextHandles();
+			Iterator<String> it = lst.iterator();
+			while (it.hasNext()) {
+				contextid = it.next();
+				if (contextid.contains("WEBVIEW")) {
+					temp = contextid;
+					driverUtils.switchToContext(temp);
+					break;
+				}else{
+					driverUtils.getAndroidDriver().context(defaultContext);
+					break;
+				}
+			}
+
+			HashMap<String, Integer> keycode = new HashMap<String, Integer>();
+			keycode.put("keycode", 4);
+
+			Thread.sleep(5);
+
+			driverUtils.getAndroidDriver().executeScript("mobile: keyevent",keycode);
+			//driverUtils.getAndroidDriver().executeScript("mobile: keyevent",keycode);
+
+			//driverUtils.getAndroidDriver().pressKeyCode(4);
+			Thread.sleep(5);
+			driverUtils.getAndroidDriver().context(defaultContext);
+
+		}catch (Exception e){
+			e.printStackTrace();
+			isClicked=false;
+		}
+
+		return isClicked;
+
+	}
+
+	public boolean tapTillElementPresent(Configuration objectRepo,WebDriver driver,String objKey,String data){
+		try {
+			driverUtils = new DriverUtils(driver, objectRepo, objKey);
+			WebElement element=driverUtils.getWebElement();
+			for(int i=0;i<4;i++) {
+				if (element.isDisplayed()) {
+					element.click();
+
+				}
+			}
+
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return true;
+	}
 	public boolean endTest(Configuration objectRepo,WebDriver driver,String objKey,String data ){
 		try {
 			driverUtils = new DriverUtils(driver, objectRepo, objKey);
@@ -424,5 +476,42 @@ public class AndroidKeywords extends CustomFunctions {
 			return false;
 		}
 	}
+
+	public boolean longPressOnElement(Configuration objectRepo, WebDriver driver, String objKey, String data) {
+		boolean isTapped = false;
+		try {
+			driverUtils = new DriverUtils(driver, objectRepo, objKey);
+			List<WebElement> webElements = driverUtils.getWebElementList();
+			Random random = new Random();
+			new MobileGestures(driver).longPress(webElements.get(random.nextInt(webElements.size()))).perform();
+			isTapped = true;
+		} catch (Exception e) {
+			ExceptionUtils.getStackTrace(e);
+		}
+		return isTapped;
+	}
+
+
+	public boolean isElementDisplayed(Configuration objectRepo, WebDriver driver, String objKey, String data){
+		boolean isDisplayed=false;
+
+		try{
+			driverUtils=new DriverUtils(driver,objectRepo,objKey);
+			List<WebElement> allElements=driverUtils.getWebElementList();
+			if(allElements.size()==1){
+				isDisplayed=allElements.get(0).isDisplayed();
+			}else if(allElements.size()>1){
+
+				Random random=new Random();
+				isDisplayed=allElements.get(random.nextInt(allElements.size())).isDisplayed();
+			}
+
+		}catch (Exception e){
+			LOGGER.error(ExceptionUtils.getStackTrace(e));
+			LOGGER.error("element is not displayed");
+		}
+		return isDisplayed;
+	}
+
 
 }

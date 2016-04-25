@@ -1,8 +1,13 @@
 package com.hc.test.framework.utils;
 
-import io.appium.java_client.*;
+import io.appium.java_client.MobileDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.SwipeElementDirection;
+import io.appium.java_client.TouchAction;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by sabyasachi on 05/04/16.
@@ -12,9 +17,17 @@ public class MobileGestures {
     MobileDriver mobileDriver;
     WebDriver webDriver;
 
+
+    static {
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
+    }
+
+    public static Logger LOGGER = LoggerFactory.getLogger(MobileGestures.class);
+
     public MobileGestures(WebDriver webDriver){
 
         this.touchAction = new TouchAction(((MobileDriver)webDriver));
+        this.webDriver=webDriver;
     }
 
 
@@ -33,24 +46,35 @@ public class MobileGestures {
         return this;
     }
 
-    public static void swipeUp(WebElement onElement,int duration){
-        ((MobileElement)onElement).swipe(SwipeElementDirection.UP, duration);
-    }
-
-    public static void swipeDown(WebElement onElement,int duration){
-        ((MobileElement)onElement).swipe(SwipeElementDirection.DOWN, duration);
-    }
-
-    public static void swipeRight(WebElement onElement,int duration){
-        ((MobileElement)onElement).swipe(SwipeElementDirection.RIGHT, duration);
-    }
-
-    public static void swipeLeft(WebElement onElement,int duration){
-        ((MobileElement)onElement).swipe(SwipeElementDirection.LEFT, duration);
-    }
-
     public MobileGestures perform(){
         setTouchAction(touchAction.perform());
         return this;
     }
+
+
+    public static void swipeUp(WebElement onElement) {
+
+        ((MobileElement) onElement).swipe(SwipeElementDirection.UP, Constants.SWIPE_DURATION);
+        LOGGER.info("Swipped up on->" + onElement.toString());
+    }
+
+    public static void swipeDown(WebElement onElement) {
+
+        ((MobileElement) onElement).swipe(SwipeElementDirection.DOWN, Constants.SWIPE_DURATION);
+        LOGGER.info("Swipped  on->" + onElement.toString());
+    }
+
+    public static void swipeRight(WebElement onElement) {
+
+        ((MobileElement) onElement).swipe(SwipeElementDirection.RIGHT, Constants.SWIPE_DURATION);
+        LOGGER.info("Swipped up on->" + onElement.toString());
+    }
+
+    public static void swipeLeft(WebElement onElement) {
+
+        ((MobileElement) onElement).swipe(SwipeElementDirection.LEFT, Constants.SWIPE_DURATION);
+        LOGGER.info("Swipped up on->" + onElement.toString());
+    }
+
 }
+
