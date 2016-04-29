@@ -103,7 +103,7 @@ public class AndroidKeywords extends CustomFunctions {
 		return result;
 	}
 
-	boolean getTextAndStoreByPattern(Configuration objRepo, WebDriver driver,
+	public boolean getTextAndStoreByPattern(Configuration objRepo, WebDriver driver,
 			String objKey, String data) {
 		boolean result = true;
 
@@ -378,12 +378,12 @@ public class AndroidKeywords extends CustomFunctions {
 			Thread.sleep(Constants.THREAD_SLEEP);
 			driverUtils = new DriverUtils(driver, objectRepo, objKey);
 			 actualText=driverUtils.getWebElement().getText().trim();
-			if(actualText.toLowerCase().equals(data)){
+			if(actualText.equals(data.trim())){
 				isEqual= true;
-				LOGGER.info(actualText+"Equals to->"+data);
+				System.out.println(actualText+"Equals to->"+data);
 			}
 		}catch (Exception e){
-			LOGGER.error(actualText+" is not equal with "+data);
+			System.out.println(actualText+" is not equal with "+data);
 			LOGGER.error("\n"+ExceptionUtils.getStackTrace(e));
 		}
 		return isEqual;
@@ -407,38 +407,12 @@ public class AndroidKeywords extends CustomFunctions {
 
 	public boolean pressDeviceBack(Configuration objectRepo,WebDriver driver,String objKey,String data){
 		boolean isClicked=true;
-		String temp=null;
-		String defaultContext="NATIVE_APP";
-		String contextid=null;
-		Set<String> lst;
 		try{
 
+			Thread.sleep(Constants.THREAD_SLEEP);
 			driverUtils=new DriverUtils(driver, objectRepo, objKey);
-			lst = driverUtils.getAndroidDriver().getContextHandles();
-			Iterator<String> it = lst.iterator();
-			while (it.hasNext()) {
-				contextid = it.next();
-				if (contextid.contains("WEBVIEW")) {
-					temp = contextid;
-					driverUtils.switchToContext(temp);
-					break;
-				}else{
-					driverUtils.getAndroidDriver().context(defaultContext);
-					break;
-				}
-			}
 
-			HashMap<String, Integer> keycode = new HashMap<String, Integer>();
-			keycode.put("keycode", 4);
-
-			Thread.sleep(5);
-
-			driverUtils.getAndroidDriver().executeScript("mobile: keyevent",keycode);
-			//driverUtils.getAndroidDriver().executeScript("mobile: keyevent",keycode);
-
-			//driverUtils.getAndroidDriver().pressKeyCode(4);
-			Thread.sleep(5);
-			driverUtils.getAndroidDriver().context(defaultContext);
+			driverUtils.getAndroidDriver().pressKeyCode(4);
 
 		}catch (Exception e){
 			e.printStackTrace();
@@ -513,5 +487,24 @@ public class AndroidKeywords extends CustomFunctions {
 		return isDisplayed;
 	}
 
+	public boolean verifyFromMap(Configuration objectRepo, WebDriver driver, String objKey, String data){
+
+		boolean isVerified=false;
+		String valueFromMap=masterMap.get(data).toString();
+		try {
+			driverUtils = new DriverUtils(driver, objectRepo, objKey);
+			WebElement element = driverUtils.getWebElement();
+			LOGGER.info("Master map Content=>"+masterMap);
+
+			if(valueFromMap.equals(element.getText())){
+				isVerified=true;
+			}
+		}catch (Exception e){
+			LOGGER.error("Verirification failed from map");
+			LOGGER.error(ExceptionUtils.getStackTrace(e));
+
+		}
+		return isVerified;
+	}
 
 }

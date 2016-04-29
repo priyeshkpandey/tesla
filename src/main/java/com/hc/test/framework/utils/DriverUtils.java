@@ -41,7 +41,10 @@ public class DriverUtils {
         this.objKey = objKey;
         this.objRepo = objRepo;
         locator = objRepo.getString(objKey);
-        by=getLocator();
+        if(locator.length()>0)
+          by=getLocator();
+        else
+            LOGGER.info("No locator found");
 
     }
 
@@ -89,6 +92,7 @@ public class DriverUtils {
                 break;
             case "Iosuiautomation":
                 by=MobileBy.IosUIAutomation(locatorArray[1]);
+                break;
             default:
                 by = null;
                 LOGGER.error(Arrays.toString(locatorArray)+" is not a valid locator");
@@ -129,7 +133,7 @@ public class DriverUtils {
                     .until(new Function<AppiumDriver, WebElement>() {
                         @Override
                         public WebElement apply(AppiumDriver driver) {
-                            System.out.println("Searching for element - " + by.toString());
+                            LOGGER.info("Searching for element - " + by.toString());
                             driver = (AppiumDriver)webDriver;
                             return driver.findElement(by);
                         }
@@ -150,7 +154,7 @@ public class DriverUtils {
                         @Override
                         public WebElement apply(WebDriver driver)
                         {
-                            System.out.println("Searching for element - "
+                            LOGGER.info("Searching for element - "
                                     + by.toString());
                             driver = webDriver;
                             return driver.findElement(by);
@@ -170,7 +174,7 @@ public class DriverUtils {
                     @Override
                     public Boolean apply(WebElement webElement)
                     {
-                        System.out.println("Checking if element is displayed - "
+                        LOGGER.info("Checking if element is displayed - "
                                 + by.toString());
                         return webElement.isDisplayed();
                     }

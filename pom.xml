@@ -34,9 +34,10 @@
        <commons.vfs2.version>2.0</commons.vfs2.version>
        <xml.resolver.version>1.2</xml.resolver.version>
        <selenium.version>2.49.0</selenium.version>
-       <appium.client.version>3.3.0</appium.client.version>
+       <appium.client.version>3.4.1</appium.client.version>
        <xml.apis.version>1.4.01</xml.apis.version>
        <log4j2.version>2.3</log4j2.version>
+      <jsonpath.version>2.2.0</jsonpath.version>
     </properties>
     
     <build>
@@ -420,8 +421,13 @@
 	<artifactId>servlet-api</artifactId>
 	<version>${javax.servlet.version}</version>
 	</dependency>
-		
-		
+      <dependency>
+          <groupId>com.jayway.jsonpath</groupId>
+          <artifactId>json-path</artifactId>
+          <version>${jsonpath.version}</version>
+      </dependency>
+
+
   </dependencies>
   <profiles>
             <profile>
