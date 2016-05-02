@@ -521,7 +521,7 @@ public class AndroidKeywords extends CustomFunctions {
 		return isVerified;
 	}
 
-    }
+    
     public boolean waitForExistence(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isexisting=true;
         try {
