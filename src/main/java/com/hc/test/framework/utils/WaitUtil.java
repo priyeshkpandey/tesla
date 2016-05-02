@@ -30,7 +30,9 @@ public class WaitUtil {
 
                 @Override
                 public Boolean apply(WebDriver driverObject) {
+                    LOGGER.info("checking if "+element.toString()+" is present");
                     return element.isDisplayed();
+
                 }
             });
             isPresent = element.isDisplayed();
@@ -54,7 +56,7 @@ public class WaitUtil {
                     .withMessage("Element was not visible. Finder - " + element.toString())
                     .until(new Function<WebElement, Boolean>() {
                         public Boolean apply(WebElement webElement) {
-                            LOGGER.debug("Checking if element is displayed - " + element.toString());
+                            LOGGER.info("Checking if element is displayed - " + element.toString());
                             return webElement.isDisplayed();
                         }
                     });

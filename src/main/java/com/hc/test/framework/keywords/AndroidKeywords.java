@@ -2,7 +2,16 @@ package com.hc.test.framework.keywords;
 
 import com.hc.test.framework.core.CustomFunctions;
 import com.hc.test.framework.utils.*;
+import com.hc.test.framework.utils.*;
 import io.appium.java_client.TouchAction;
+
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.ClientProtocolException;
@@ -15,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hc.test.framework.core.CustomFunctions;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -214,12 +224,12 @@ public class AndroidKeywords extends CustomFunctions {
             WebElement element = driverUtils.getWebElement();
             if(data.equals("check")){
             	LOGGER.info("attribute value:"+element.getAttribute("checked"));
-            	if(element.getAttribute("checked").equals("true")){
+            	if(element.getAttribute("checked").trim().equalsIgnoreCase("true")){
             		isClicked=true;
             	}else{
                     if(element.getAttribute("enabled").trim().equalsIgnoreCase("true")){
                     	element.click();
-        	            if(element.getAttribute("checked").equals("true") ){
+        	            if(element.getAttribute("checked").trim().equalsIgnoreCase("true") ){
         	            	isClicked=true;
         	            }else{
         	            	LOGGER.info("Unable to select the checkbox:"+objKey);
@@ -229,12 +239,12 @@ public class AndroidKeywords extends CustomFunctions {
                     }
             	}            		
             }else if(data.equals("uncheck")){
-            	if(element.getAttribute("checked").equals("false") ){
+            	if(element.getAttribute("checked").trim().equalsIgnoreCase("false") ){
             		isClicked=true;
             	}else{
                     if(element.getAttribute("enabled").trim().equalsIgnoreCase("true")){
                     	element.click();
-        	            if(element.getAttribute("checked").equals("false") ){
+        	            if(element.getAttribute("checked").trim().equalsIgnoreCase("false") ){
         	            	isClicked=true;
         	            }else{
         	            	LOGGER.debug("Unable to deselect the checkbox:"+objKey);
@@ -289,12 +299,14 @@ public class AndroidKeywords extends CustomFunctions {
         try {
 			Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils= new DriverUtils(driver, objRepo, objKey);
+            LOGGER.info("Text"+ data +" is to be tapped");
             WebElement element=driverUtils.getWebElement();
             TouchAction actions= new TouchAction(driverUtils.getMobileDriver());
             actions.tap(element).perform();
         }
         catch (Exception e){
             e.printStackTrace();
+            LOGGER.info("Text"+ data +" could not tapped");
             istappedin=false;
         }
         return istappedin;
@@ -309,6 +321,8 @@ public class AndroidKeywords extends CustomFunctions {
         }
         catch (Exception e){
             e.printStackTrace();
+            ishidden=true;
+            LOGGER.info("Keyword is not executed");
             ishidden=true;
         }
         return ishidden;
@@ -507,4 +521,41 @@ public class AndroidKeywords extends CustomFunctions {
 		return isVerified;
 	}
 
+    }
+    public boolean waitForExistence(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isexisting=true;
+        try {
+            driverUtils= new DriverUtils(driver, objRepo, objKey);
+            WebElement element=driverUtils.getWebElement();
+            WaitUtil.waitForElementPresent(element);
+            LOGGER.info("Checking if "+element.toString()+" is present in keywords");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            isexisting=false;
+            LOGGER.info("Element Not Found");
+        }
+        return isexisting;
+    }
+    public boolean selectByValue(Configuration objRepo, WebDriver driver, String objKey, String data){
+        boolean isselected=true;
+        try {
+            driverUtils = new DriverUtils(driver, objRepo, objKey);
+            List<WebElement> element = driverUtils.getWebElementList();
+            System.out.println(element.toString());
+                for (WebElement option : element) {
+                    if ((option.getText().trim()).equals(data.trim())) {
+                        LOGGER.info("Checking if " + data + " is selected in keywords");
+                        option.click();
+                        break;
+                    }
+                }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            isselected=false;
+            LOGGER.info("selectByValue keyword execution failed");
+        }
+        return isselected;
+    }
 }
