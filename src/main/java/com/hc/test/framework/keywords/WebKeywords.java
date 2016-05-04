@@ -9,6 +9,7 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -197,7 +198,7 @@ public class WebKeywords extends CustomFunctions {
 	   			WebElement menuoptions = driverUtils.getWebElement();
 	   			actions.moveToElement(menuoptions);
 	   			actions.click().build().perform();
-	   			System.out.println("mouse click action completed");
+	   			
 	   		
 	   			
 	   		} catch (Exception e) {
@@ -252,6 +253,104 @@ public class WebKeywords extends CustomFunctions {
 	   			e.printStackTrace();
 	   		}
 	   	 LOGGER.info("keyword Verify Title completed executing");
+	   		return isSucess;
+	}
+	
+	public boolean waitforsometime(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		 boolean isSucess = true;
+		
+	   		try {
+	   			Thread.sleep(1000);
+	   			
+	   		
+	   		} catch (Exception e) {
+
+	   			isSucess = false;
+	   			ExceptionUtils.getStackTrace(e);
+	   			e.printStackTrace();
+	   		}
+	   		return isSucess;
+	}
+	
+	public boolean key_down_enter(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		 boolean isSucess = true;
+		
+	   		try {
+	   			Thread.sleep(Constants.THREAD_SLEEP);
+	   			Actions actions = new Actions(driver);
+	   			DriverUtils driverUtils = new DriverUtils(driver, objRepo, objKey);
+	   			actions.sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).perform();
+	   		
+	   		} catch (Exception e) {
+
+	   			isSucess = false;
+	   			ExceptionUtils.getStackTrace(e);
+	   			e.printStackTrace();
+	   		}
+	   		return isSucess;
+	}
+	
+	public boolean isAlertPresent(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		 boolean isSucess = true;
+		
+	   		try {
+	   			Thread.sleep(Constants.THREAD_SLEEP);
+	   			DriverUtils driverUtils=new DriverUtils(driver,objRepo,objKey);
+	   			WebDriverWait wait = new WebDriverWait(driver, 60);
+	   			if(wait.until(ExpectedConditions.alertIsPresent())==null){
+	   				isSucess = false;
+	   			}
+	   	
+	   		
+	   		} catch (Exception e) {
+
+	   			isSucess = false;
+	   			ExceptionUtils.getStackTrace(e);
+	   			e.printStackTrace();
+	   		}
+	   		return isSucess;
+	}
+	
+	public boolean key_enter(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		 boolean isSucess = true;
+		
+	   		try {
+	   			Thread.sleep(Constants.THREAD_SLEEP);
+	   	
+	   			DriverUtils driverUtils = new DriverUtils(driver, objRepo, objKey);
+	   			driverUtils.getWebElement().sendKeys(Keys.ENTER);
+	   		
+	   		} catch (Exception e) {
+
+	   			isSucess = false;
+	   			ExceptionUtils.getStackTrace(e);
+	   			e.printStackTrace();
+	   		}
+	   		return isSucess;
+	}
+	
+	
+	public boolean scrolldown(Configuration objRepo, WebDriver driver, String objKey, String data) {
+		 boolean isSucess = true;
+		
+	   		try {
+	   			Thread.sleep(Constants.THREAD_SLEEP);
+	   	
+	   			DriverUtils driverUtils = new DriverUtils(driver, objRepo, objKey);
+	   			WebElement ele = driverUtils.getWebElement();
+	   			ele.click();
+	   			ele.click();
+	   			for (int i=0;i<Integer.parseInt(data);i++)
+	   			{
+	   				ele.sendKeys(Keys.ARROW_DOWN);
+	   			}
+	   		
+	   		} catch (Exception e) {
+
+	   			isSucess = false;
+	   			ExceptionUtils.getStackTrace(e);
+	   			e.printStackTrace();
+	   		}
 	   		return isSucess;
 	}
 }
