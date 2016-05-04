@@ -279,6 +279,17 @@ public class DriverUtils {
             ((IOSDriver)webDriver).execute(DriverCommand.SWITCH_TO_CONTEXT,params);
         }
     }
+    
+    public void scrollUp(int duration){
+    	AndroidDriver androidDriver=(AndroidDriver)webDriver;
+		Dimension size = androidDriver.manage().window().getSize();
+        System.out.println(size);
+        int endY=(int) (size.width*0.10);
+        int startY=(int) (size.width*0.9);
+        int startX=size.height/2;
+        androidDriver.swipe(startX, startY, startX, endY, duration);
+		
+		}
 
 
 
