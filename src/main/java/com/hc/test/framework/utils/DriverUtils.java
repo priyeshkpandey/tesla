@@ -35,16 +35,21 @@ public class DriverUtils {
     private AppiumDriver appiumDriver;
     private Pattern p;
     private Matcher matcher;
+    StackTraceElement stacktrace = Thread.currentThread().getStackTrace()[3];
+
 
     public DriverUtils(WebDriver webDriver, Configuration objRepo, String objKey) {
         this.webDriver = webDriver;
         this.objKey = objKey;
         this.objRepo = objRepo;
         locator = objRepo.getString(objKey);
-        if(locator.length()>0)
-          by=getLocator();
-        else
-            LOGGER.info("No locator found");
+        if(null==locator){
+            LOGGER.info("Locator value is null");
+        }
+
+        else if(locator.length()>0) {
+            by=getLocator();
+        }
 
     }
 
@@ -162,7 +167,7 @@ public class DriverUtils {
                     });
         }
 
-        new FluentWait<>(webElement1)
+       /* new FluentWait<>(webElement1)
                 .withTimeout(6, TimeUnit.SECONDS)
                 .pollingEvery(500, TimeUnit.MILLISECONDS)
                 .ignoring(WebDriverException.class)
@@ -178,7 +183,7 @@ public class DriverUtils {
                                 + by.toString());
                         return webElement.isDisplayed();
                     }
-                });
+                });*/
 
         return webElement1;
     }
