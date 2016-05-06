@@ -2,17 +2,9 @@ package com.hc.test.framework.keywords;
 
 import com.hc.test.framework.core.CustomFunctions;
 import com.hc.test.framework.utils.*;
-import com.hc.test.framework.utils.*;
 import io.appium.java_client.TouchAction;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -24,11 +16,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hc.test.framework.core.CustomFunctions;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,7 +148,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean tapOnButton(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isLoggedin=true;
         try {
-            Thread.sleep(Constants.THREAD_SLEEP);
+            //Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils= new DriverUtils(driver, objRepo, objKey);
             WebElement element=driverUtils.getWebElement();
             element.click();
@@ -169,7 +162,7 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean clearText(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isCleared=true;
         try {
-            Thread.sleep(Constants.THREAD_SLEEP);
+            //Thread.sleep(Constants.THREAD_SLEEP);
             driverUtils=new DriverUtils(driver, objRepo, objKey);
             driverUtils.getWebElement().clear();
 
@@ -504,13 +497,13 @@ public class AndroidKeywords extends CustomFunctions {
 	public boolean verifyFromMap(Configuration objectRepo, WebDriver driver, String objKey, String data){
 
 		boolean isVerified=false;
-		String valueFromMap=masterMap.get(data).toString();
+		String valueFromMap=masterMap.get(data).toString().trim();
 		try {
 			driverUtils = new DriverUtils(driver, objectRepo, objKey);
 			WebElement element = driverUtils.getWebElement();
 			LOGGER.info("Master map Content=>"+masterMap);
 
-			if(valueFromMap.equals(element.getText())){
+			if(valueFromMap.equals(element.getText().trim())){
 				isVerified=true;
 			}
 		}catch (Exception e){
@@ -540,16 +533,18 @@ public class AndroidKeywords extends CustomFunctions {
     public boolean selectByValue(Configuration objRepo, WebDriver driver, String objKey, String data){
         boolean isselected=true;
         try {
-            driverUtils = new DriverUtils(driver, objRepo, objKey);
-            List<WebElement> element = driverUtils.getWebElementList();
-            System.out.println(element.toString());
-                for (WebElement option : element) {
-                    if ((option.getText().trim()).equals(data.trim())) {
-                        LOGGER.info("Checking if " + data + " is selected in keywords");
-                        option.click();
-                        break;
-                    }
-                }
+			driverUtils=new DriverUtils(driver,objRepo,objKey);
+			List<WebElement> elements=driverUtils.getWebElementList();
+			if(StringUtils.isNumeric(data) && Integer.parseInt(data)<=elements.size()){
+				elements.get(Integer.parseInt(data)).click();
+			}else{
+				for(WebElement element:elements){
+					if(element.getAttribute("text").trim().equals(data.trim())){
+						element.click();
+						break;
+					}
+				}
+			}
         }
         catch (Exception e){
             e.printStackTrace();
@@ -558,4 +553,58 @@ public class AndroidKeywords extends CustomFunctions {
         }
         return isselected;
     }
+
+
+
+	public boolean sleep(Configuration objRepo, WebDriver driver, String objKey, String data){
+
+		try{
+			Thread.sleep(Long.parseLong(data));
+			LOGGER.info("Waiting for "+data+" miliseconds");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	public boolean scrollUp(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isScrolled=true;
+		try{
+			driverUtils=new DriverUtils(driver,objRepo,data);
+			if(null==data) {
+				driverUtils.scrollUp(Constants.SCROLLTIME);
+				LOGGER.info("Scroll up...done using default scroll value");
+			}
+			else{
+				driverUtils.scrollUp(Integer.parseInt(data));
+			}
+
+		}catch (Exception e){
+
+			ExceptionUtils.getMessage(e);
+			e.printStackTrace();
+			LOGGER.info("Scroll up failed");
+			isScrolled=false;
+		}
+		return isScrolled;
+	}
+
+	public boolean verifyDbDataWithUi(Configuration objRepo, WebDriver driver, String objKey, String data){
+		boolean isVerified=false;
+		try{
+			String valueFromMap=masterMap.get(data).toString().trim();
+			LOGGER.info("Transaction Id from ui: "+valueFromMap);
+			HttpRequestHelper helper=new HttpRequestHelper();
+			String transactionid=helper.getTransactionId(data);
+			LOGGER.info("Transaction Id from DB: "+transactionid);
+			if(valueFromMap.equals(transactionid)){
+				isVerified=true;
+				LOGGER.info("Verified Successfully");
+			}
+		}catch (Exception e){
+			LOGGER.info("Verification failed");
+		}
+		return isVerified;
+	}
+
 }

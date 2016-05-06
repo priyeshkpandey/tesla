@@ -15,14 +15,19 @@ public class HttpRequestHelper {
     private Configuration prop;
     private ReadConfiguration readConfig;
     private HashMap<String, HashMap<String, String>> queryResults;
-    public HashMap<String,String> akoshaAuthHeaders;
 
-    public MultivaluedMap setAndGetAkoshaAuth(String mobileno) throws Exception {
 
+    public HttpRequestHelper(){
         databaseUtil=new DatabaseUtil("helpchat");
         readConfig = new ReadConfiguration("config");
         prop = readConfig.getConfigFile();
         databaseUtil.createConnection();
+    }
+
+
+    public MultivaluedMap setAndGetAkoshaAuth(String mobileno) throws Exception {
+
+
 
 
 
@@ -48,5 +53,26 @@ public class HttpRequestHelper {
     }
 
 
+    public String getTransactionId(String mobileNo){
+
+        MessageFormat userIdQuery = new MessageFormat(
+                prop.getString("userid.from.mobile"));
+        Object[] userParams = { mobileNo };
+        queryResults = databaseUtil.getQueryResultAsMapForSingleTable(userIdQuery
+                .format(userParams));
+        Object[] userId = {queryResults.get("user").get("id1")};
+
+        MessageFormat transactionQuery=new MessageFormat(prop.getString("checkout.order.success"));
+        queryResults=databaseUtil.getQueryResultAsMapForSingleTable(transactionQuery.format(userId));
+
+        String transaction_id=queryResults.get("orders").get("transaction_id1");
+      //  String order_status=queryResults.get("orders").get("order_status2");
+
+
+
+        return transaction_id;
+
+
+    }
 
 }
