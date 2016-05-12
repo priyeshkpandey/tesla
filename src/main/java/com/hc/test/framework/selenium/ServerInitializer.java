@@ -4,11 +4,6 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.impl.StandardFileSystemManager;
-import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -26,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -193,6 +187,7 @@ public class ServerInitializer {
                 desiredCapabilities.setCapability("autoLaunch", true);
                 desiredCapabilities.setCapability("showIOSLog", true);
                 desiredCapabilities.setCapability("--force-ipad", false);
+                desiredCapabilities.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT,"500");
                 desiredCapabilities.setCapability(MobileCapabilityType.APP, getBuildpath());
                 break;
 
@@ -215,6 +210,7 @@ public class ServerInitializer {
             HttpGet getRequest = new HttpGet(localurl);
             HttpResponse response = httpClient.execute(getRequest);
             if(response.getStatusLine().getStatusCode()==200) {
+                LOGGER.info("IOS Device connected ");
                 return udid;
             }
             else{
